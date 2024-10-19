@@ -4,6 +4,8 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 
+#include <videoDriver.h>
+
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
@@ -479,19 +481,71 @@ void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor)
 }
 
 void printStr(char* str, int x, int y, int fgcolor, int bgcolor){
-	
+    for (size_t i = 0; str[i]; i++) {
+        drawchar(str[i], x + i * 8, y, fgcolor, bgcolor);
+    }
+}
+
+void reverseStr(char *str, int length) {
+    int start = 0;
+    int end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+void intToStr(int num, char *str) {
+    int i = 0;
+    int isNegative = 0;
+
+    // Handle negative numbers
+    if (num < 0) {
+        isNegative = 1;
+        num = -num;
+    }
+
+    // Convert each digit of the number to a character
+    do {
+        str[i++] = (num % 10) + '0';
+        num /= 10;
+    } while (num > 0);
+
+    // Add negative sign if necessary
+    if (isNegative) {
+        str[i++] = '-';
+    }
+
+    // Null-terminate the string
+    str[i] = '\0';
+
+    // Reverse the string
+    reverseStr(str, i);
 }
 
 
-int main() {	
+int main() {
 	putPixel(0x00FF0000, 20, 20); //Imprime un pixel rojo
 
     int posX = 50;
     int posY = 50;
     uint32_t foregroundColor = 0x00FFFFFF; // White color in RGB
     uint32_t backgroundColor = 0x00000000; // Black color in RGB
-	
-    drawchar('H', posX, posY, foregroundColor, backgroundColor);	
-	
+
+    char widthStr[10];
+    intToStr(getWidth(), widthStr);
+    printStr(widthStr, posX, posY, foregroundColor, backgroundColor);
+    // Width = 1024
+
+    char heightStr[10];
+    intToStr(getHeight(), heightStr);
+    printStr(heightStr, posX, posY + 20, foregroundColor, backgroundColor);
+    // Height = 768
+
 	return 0;
 }
+
+
