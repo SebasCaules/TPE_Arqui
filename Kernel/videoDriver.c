@@ -524,6 +524,12 @@ void printStr(char* str, int fgcolor, int bgcolor) {
     }
 }
 
+void printStrBW(char* str){
+	uint32_t foregroundColor = 0x00FFFFFF; // White color in RGB
+    uint32_t backgroundColor = 0x00000000; // Black color in RGB
+	printStr(str, foregroundColor, backgroundColor);
+}
+
 void reverseStr(char *str, int length) {
     int start = 0;
     int end = length - 1;

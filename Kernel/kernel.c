@@ -5,6 +5,7 @@
 #include <naiveConsole.h>
 
 #include <videoDriver.h>
+#include "idtLoader.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -86,20 +87,21 @@ void * initializeKernelBinary()
 }
 
 int main() {
+	load_idt();
 	// putPixel(0x00FF0000, 20, 20); //Imprime un pixel rojo
 
     uint32_t foregroundColor = 0x00FFFFFF; // White color in RGB
     uint32_t backgroundColor = 0x00000000; // Black color in RGB
     
-    char *sampleText = "Once upon a time, in a land far, far away, there lived a brave knight. \
-    He ventured across mountains, valleys, and forests in search of a mysterious treasure. \
-    However, the journey was not easy. He faced fierce dragons, treacherous paths, and endless \
-    storms. Yet, his determination was unshaken. \
-    One day, after a long and tiresome quest, he found a hidden cave. Inside, the treasure \
-    sparkled like the stars in the night sky. But the knight realized something: the real \
-    treasure was not gold or jewels, but the wisdom he had gained along the way.";
+    // char *sampleText = "Once upon a time, in a land far, far away, there lived a brave knight. \
+    // He ventured across mountains, valleys, and forests in search of a mysterious treasure. \
+    // However, the journey was not easy. He faced fierce dragons, treacherous paths, and endless \
+    // storms. Yet, his determination was unshaken. \
+    // One day, after a long and tiresome quest, he found a hidden cave. Inside, the treasure \
+    // sparkled like the stars in the night sky. But the knight realized something: the real \
+    // treasure was not gold or jewels, but the wisdom he had gained along the way.";
 
-    printStr(sampleText, foregroundColor, backgroundColor);
+    // printStr(sampleText, foregroundColor, backgroundColor);
 
     // char widthStr[10];
     // intToStr(getWidth(), widthStr);
@@ -109,7 +111,10 @@ int main() {
     // char heightStr[10];
     // intToStr(getHeight(), heightStr);
     // printStr(heightStr, foregroundColor, backgroundColor);
-    // // Height = 768
+    
+	// // Height = 768
+	printStrBW("hola");
+	while(1);
 
 	return 0;
 }

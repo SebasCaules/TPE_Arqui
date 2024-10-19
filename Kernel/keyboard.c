@@ -3,6 +3,7 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
+#include "videoDriver.h"
 
 
 char scanCodeToAscii(char shift_flag){
@@ -140,7 +141,7 @@ void pressKey(){
         //     ncDelete(); //Falta implementar
         //     break;
         case 13:
-            ncNewline();
+            //Rellenar
             break;
         case (char)0xAA:
             shift_flag = 0;
@@ -153,7 +154,7 @@ void pressKey(){
             write = 0;
             break;
         default:
-            ncPrintChar(pressed);
+            printStrBW(pressed);
     }
     if(write)
         pressed = scanCodeToAscii(shift_flag);
