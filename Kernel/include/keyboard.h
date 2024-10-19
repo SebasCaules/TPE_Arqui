@@ -1,0 +1,3 @@
+char scanCodeToAscii();
+
+void pressKey();
