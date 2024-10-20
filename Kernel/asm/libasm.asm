@@ -1,4 +1,4 @@
-GLOBAL cpuVendor, getSecs, getMins, getHours, getKeyPressed
+GLOBAL cpuVendor, getSecs, getMins, getHours, getPressedKey
 
 section .text
 	
@@ -65,8 +65,10 @@ getHours:
 	ret
 
 
-getKeyPressed:
-    mov rax, 0
-    in al, 60h
+getPressedKey:
+	push rbp
+	mov rbp, rsp
 
-    ret
+	in al, 60h
+	leave
+	ret

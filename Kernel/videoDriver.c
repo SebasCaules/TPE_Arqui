@@ -447,10 +447,12 @@ uint8_t font_bitmap[94][16] = {
 
 };
 
+
+
 void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor) {
 	int cx,cy;
 	int mask[8]={128,64,32,16,8,4,2,1};
-	unsigned char *glyph=font_bitmap[c-32];
+	unsigned char *glyph=font_bitmap[c];
 
 	for(cy=0;cy<16;cy++){
 		for(cx=0;cx<8;cx++){
@@ -459,22 +461,16 @@ void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor) {
 	}
 }
 
-// void printStr(char* str, int fgcolor, int bgcolor) {
-//     for (int i = 0; str[i]; i++) {
-//         drawchar(str[i], x + i * 8, y, fgcolor, bgcolor);
-//     }
-// }
-
 // Global variables to store the current position
-int current_x = BORDER_PADDING;
-int current_y = BORDER_PADDING;
+int currentX = BORDER_PADDING;
+int currentY = BORDER_PADDING;
 
 void printStr(char* str, int fgcolor, int bgcolor) {
     while (*str) {
         // Handle newlines in the string
         if (*str == '\n') {
-            current_x = BORDER_PADDING;  // Reset x to the left margin
-            current_y += CHAR_HEIGHT + VERTICAL_PADDING;  // Move y to the next line with padding
+            currentX = BORDER_PADDING;  // Reset x to the left margin
+            currentY += CHAR_HEIGHT + VERTICAL_PADDING;  // Move y to the next line with padding
             str++;  // Move to the next character
             continue;
         }
@@ -487,33 +483,33 @@ void printStr(char* str, int fgcolor, int bgcolor) {
         int word_length = word_start;
 
         // Check if the word fits in the remaining space on the current line
-        if (current_x + word_length * CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
+        if (currentX + word_length * CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
             // Move to the next line if the word doesn't fit
-            current_x = BORDER_PADDING;  // Reset to the start of the new line
-            current_y += CHAR_HEIGHT + VERTICAL_PADDING;  // Move to the next line with padding
+            currentX = BORDER_PADDING;  // Reset to the start of the new line
+            currentY += CHAR_HEIGHT + VERTICAL_PADDING;  // Move to the next line with padding
         }
 
         // Check if we're hitting the bottom boundary
-        if (current_y + CHAR_HEIGHT > WINDOW_HEIGHT - BORDER_PADDING) {
+        if (currentY + CHAR_HEIGHT > WINDOW_HEIGHT - BORDER_PADDING) {
             // Stop printing if we're beyond the allowed window space
             return;
         }
 
         // Print the word character by character
         for (int i = 0; i < word_length; i++) {
-            drawchar(str[i], current_x, current_y, fgcolor, bgcolor);
-            current_x += CHAR_WIDTH;
+            drawchar(str[i], currentX, currentY, fgcolor, bgcolor);
+            currentX += CHAR_WIDTH;
         }
 
         // Skip consecutive spaces and handle them as a single space
         str += word_length;
         if (*str == ' ') {
             // Handle the first space after the word
-            if (current_x + CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
-                current_x = BORDER_PADDING;  // Reset x to the start of the next line
-                current_y += CHAR_HEIGHT + VERTICAL_PADDING;  // Move to the next line with padding
+            if (currentX + CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
+                currentX = BORDER_PADDING;  // Reset x to the start of the next line
+                currentY += CHAR_HEIGHT + VERTICAL_PADDING;  // Move to the next line with padding
             } else {
-                current_x += CHAR_WIDTH;  // Move x for the space
+                currentX += CHAR_WIDTH;  // Move x for the space
             }
 
             // Skip any consecutive spaces after the first one
@@ -521,6 +517,41 @@ void printStr(char* str, int fgcolor, int bgcolor) {
                 str++;  // Skip multiple spaces
             }
         }
+    }
+}
+
+void printCharBW(char c) {
+    // Define character width, height, and space limits
+    const int charWidth = 8;
+    const int charHeight = 16;
+
+    // Check if the character is a space or newline
+    if (c == ' ') {
+        // Handle space character by advancing the current position
+        currentX += charWidth;
+    } else if (c == '\n') {
+        // Handle newline by resetting x position and moving to the next line
+        currentX = BORDER_PADDING;
+        currentY += charHeight + VERTICAL_PADDING;
+    } else {
+        // Check if the character will go out of bounds and wrap if needed
+        if (currentX + charWidth > WINDOW_WIDTH - BORDER_PADDING) {
+            // Move to the next line if no space for the character
+            currentX = BORDER_PADDING;
+            currentY += charHeight + VERTICAL_PADDING;
+        }
+        
+        // Call drawchar() to print the character at the current position
+        drawchar(c, currentX, currentY, 0x00FFFFFF, 0x00000000);
+        
+        // Update currentX for the next character
+        currentX += charWidth;
+    }
+    
+    // Check if we go beyond the window height
+    if (currentY + charHeight > WINDOW_HEIGHT - BORDER_PADDING) {
+        // Reset Y position or handle screen overflow as necessary
+        currentY = BORDER_PADDING;  // Optionally reset or scroll
     }
 }
 

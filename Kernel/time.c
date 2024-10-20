@@ -9,7 +9,7 @@ void timer_handler() {
 	if(ticks % 18 == 0 && ticks != 0){
 		char str[20];
 		intToStr(ticks/18, str);
-		printStrBW(str);
+		//printStrBW(str);
 	}
 }
 
@@ -23,7 +23,7 @@ int seconds_elapsed() {
 
 void nano_sleep(int time){
 	int start = ticks;
-	while(ticks - start < time){
+	while(ticks - start < time) {
 		_hlt();
 	}
 }
