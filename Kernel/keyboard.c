@@ -109,7 +109,7 @@ void pressedKey(){
         shiftFlag = 0;
         return;
     case CAPS_LOCK_PRESS:
-        !capsLockFlag;
+        capsLockFlag = !capsLockFlag;
         break;
     }
 
@@ -120,16 +120,14 @@ void pressedKey(){
             char index = shiftFlag;
             //Chequea que la tecla apretada sea una letra, si lo es y el capslock esta activado se van a poner en mayus
             if(keyValues[c][0] >= 'a' && keyValues[c][0] <= 'z'){
-                index = capsLockFlag;
+                index = capsLockFlag ? !shiftFlag : shiftFlag;
             }
             buffer[current++] = keyValues[c][index];
+            printCharBW(buffer[current-1]);
         }
         current %= BUFFER_SIZE; //Limpia ciclicamente el current
         
-        printCharBW(buffer[current-1]);
     }
-
-    
 }
 
 int bufferHasNext(int index){

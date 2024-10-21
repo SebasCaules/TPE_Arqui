@@ -56,6 +56,9 @@ int main() {
 	printStrBW("hola, como estas?! 1234");
 	printNewLine();
 	printCharBW('a');
+	printTab();
+	printCharBW('a');
+
 
 	while(1);
 

@@ -446,6 +446,8 @@ uint8_t font_bitmap[94][16] = {
 
 };
 
+int currentX = BORDER_PADDING;
+int currentY = BORDER_PADDING;
 
 
 void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor) {
@@ -454,7 +456,7 @@ void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor) {
 	unsigned char *glyph=font_bitmap[c - 32];
 
 	for(cy=0;cy<16;cy++){
-		
+
 		for(cx=0;cx<8;cx++){
 			putPixel(glyph[cy]&mask[cx]?fgcolor:bgcolor,x+cx,y+cy-12);
 		}
@@ -462,9 +464,6 @@ void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor) {
 }
 
 // Global variables to store the current position
-int currentX = BORDER_PADDING;
-int currentY = BORDER_PADDING;
-
 void printStr(char* str, int fgcolor, int bgcolor) {
     while (*str) {
         // Handle newlines in the string
@@ -564,6 +563,25 @@ void printStrBW(char* str){
 void printNewLine(){
 	currentX = BORDER_PADDING;
 	currentY += CHAR_HEIGHT + VERTICAL_PADDING;
+}
+
+void printTab(){
+	for (int i = 0; i < 4; i++) {
+		printCharBW(' ');
+	}
+}
+
+void drawRectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color) {
+    for (uint64_t i = 0; i < width; i++) {
+        for (uint64_t j = 0; j < height; j++) {
+            putPixel(color, x + i, y + j);
+        }
+    }
+}
+
+void deleteChar() {
+    currentX -= CHAR_WIDTH;
+    drawRectangle(currentX, currentY - CHAR_HEIGHT, CHAR_WIDTH, CHAR_HEIGHT, 0x00000000);
 }
 
 void reverseStr(char *str, int length) {
