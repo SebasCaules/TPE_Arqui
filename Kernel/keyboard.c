@@ -125,20 +125,13 @@ void pressedKey(){
             buffer[current++] = keyValues[c][index];
         }
         current %= BUFFER_SIZE; //Limpia ciclicamente el current
+        
+        printCharBW(buffer[current-1]);
     }
 
-    printBuffer();
     
 }
 
 int bufferHasNext(int index){
     return index < BUFFER_SIZE && index <= current;
-}
-
-void printBuffer(){
-    int index = 0;
-    while (bufferHasNext(index)){
-        printCharBW(buffer[index]);
-        index++;
-    }
 }
