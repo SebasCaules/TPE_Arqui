@@ -126,6 +126,8 @@ void pressedKey(){
         }
         current %= BUFFER_SIZE; //Limpia ciclicamente el current
     }
+
+    printBuffer();
     
 }
 
@@ -136,7 +138,7 @@ int bufferHasNext(int index){
 void printBuffer(){
     int index = 0;
     while (bufferHasNext(index)){
-        
+        printCharBW(buffer[index]);
+        index++;
     }
-    
 }

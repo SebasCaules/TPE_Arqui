@@ -454,6 +454,7 @@ void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor) {
 	unsigned char *glyph=font_bitmap[c - 32];
 
 	for(cy=0;cy<16;cy++){
+		
 		for(cx=0;cx<8;cx++){
 			putPixel(glyph[cy]&mask[cx]?fgcolor:bgcolor,x+cx,y+cy-12);
 		}

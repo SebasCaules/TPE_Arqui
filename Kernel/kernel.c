@@ -51,23 +51,13 @@ void * initializeKernelBinary() {
 int main() {
 	load_idt();
 
-    uint32_t foregroundColor = 0x00FFFFFF; // White color in RGB
-    uint32_t backgroundColor = 0x00000000; // Black color in RGB
-	
-    // char *sampleText = "Once upon a time, in a land far, far away, there lived a brave knight. \
-    // He ventured across mountains, valleys, and forests in search of a mysterious treasure. \
-    // However, the journey was not easy. He faced fierce dragons, treacherous paths, and endless \
-    // storms. Yet, his determination was unshaken. \
-    // One day, after a long and tiresome quest, he found a hidden cave. Inside, the treasure \
-    // sparkled like the stars in the night sky. But the knight realized something: the real \
-    // treasure was not gold or jewels, but the wisdom he had gained along the way.";
+	printCharBW('A');
+	printCharBW('a');
+	printStrBW("hola, como estas?! 1234");
+	printNewLine();
+	printCharBW('a');
 
-    // printStr(sampleText, foregroundColor, backgroundColor);
-
-	printStrBW("hola");
 	while(1);
 
 	return 0;
 }
-
-
