@@ -12,11 +12,13 @@ GLOBAL _irq02Handler
 GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
+GLOBAL _irq80Handler
 
 GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
+EXTERN sysCallHandler
 
 section .text
 
@@ -54,6 +56,23 @@ section .text
 	pop rcx
 	pop rbx
 	pop rax
+%endmacro
+
+%macro popStateNoRAX 0
+	pop r15
+	pop r14
+	pop r13
+	pop r12
+	pop r11
+	pop r10
+	pop r9
+	pop r8
+	pop rsi
+	pop rdi
+	pop rbp
+	pop rdx
+	pop rcx
+	pop rbx
 %endmacro
 
 %macro irqHandlerMaster 1
@@ -137,6 +156,15 @@ _irq04Handler:
 ;USB
 _irq05Handler:
 	irqHandlerMaster 5
+
+;Sys Calls
+_irq80Handler:
+	pushState
+	mov rdi, rsp
+	call sysCallHandler
+	popStateNoRAX
+	add rsp, 8
+	iretq
 
 
 ;Zero Division Exception
