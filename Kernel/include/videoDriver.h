@@ -6,6 +6,10 @@ void printStr(char* str, int fgcolor, int bgcolor);
 
 void printStrBW(char* str);
 
+void printCharBW(char c);
+
+void printNewLine();
+
 void intToStr(int num, char *str);
 
 

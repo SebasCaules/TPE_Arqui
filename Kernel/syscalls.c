@@ -4,15 +4,11 @@
 
 
 void sysCallHandler(){
-    
+
 }
 
 int64_t sys_read(uint64_t fd, uint16_t * buffer, uint64_t length){
     uint64_t i = 0;
-    while(i < length && bufferHasNext()){
-        buffer[i] = getCurrent();
-        i++;
-    }
     return i;
 }
 
