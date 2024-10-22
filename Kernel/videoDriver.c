@@ -1,11 +1,11 @@
 #include <videoDriver.h>
 #include "font.h"
 
-
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
 #define BORDER_PADDING 15
 #define VERTICAL_PADDING 4
+#define HORIZONTAL_PADDING 2
 #define CHAR_HEIGHT 16
 #define CHAR_WIDTH 8
 #define WHITE 0x00FFFFFF
@@ -54,10 +54,18 @@ typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
-int currentX = BORDER_PADDING;
-int currentY = BORDER_PADDING;
+uint64_t currentX = BORDER_PADDING;
+uint64_t currentY = BORDER_PADDING;
+uint64_t currentLinePosition = 0;
 
 static char buffer[BUFFER_SIZE] = { '0' };
+
+typedef enum CursorMovementType {
+    CURSOR_TYPING,
+    CURSOR_DELETING,
+    CURSOR_NEWLINE,
+    CURSOR_MOVING
+} CursorMovementType;
 
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     uint8_t * framebuffer = (uint8_t *) VBE_mode_info->framebuffer;
@@ -71,24 +79,26 @@ void printChar(char c, int fgcolor, int bgcolor) {
     // Check if the character is a space or newline
     if (c == ' ') {
         // Handle space character by advancing the current position
-        currentX += CHAR_WIDTH;
+        currentX += CHAR_WIDTH + HORIZONTAL_PADDING;
+        currentLinePosition++;
     } else if (c == '\n') {
         // Handle newline by resetting x position and moving to the next line
         currentX = BORDER_PADDING;
         currentY += CHAR_HEIGHT + VERTICAL_PADDING;
     } else {
+        currentLinePosition++;
         // Check if the character will go out of bounds and wrap if needed
         if (currentX + CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
             // Move to the next line if no space for the character
             currentX = BORDER_PADDING;
             currentY += CHAR_HEIGHT + VERTICAL_PADDING;
         }
-        
-        // Call drawchar() to print the character at the current position
-        drawchar(c, currentX, currentY, fgcolor, bgcolor);
+
+        // Call drawChar() to print the character at the current position
+        drawChar(c, currentX + HORIZONTAL_PADDING, currentY, fgcolor, bgcolor);
         
         // Update currentX for the next character
-        currentX += CHAR_WIDTH;
+        currentX += CHAR_WIDTH + HORIZONTAL_PADDING;
     }
     
     // Check if we go beyond the window height
@@ -96,6 +106,7 @@ void printChar(char c, int fgcolor, int bgcolor) {
         // Reset Y position or handle screen overflow as necessary
         currentY = BORDER_PADDING;  // Optionally reset or scroll
     }
+    updateTextCursor(CURSOR_TYPING);
 }
 
 void printCharBW(char c){
@@ -121,27 +132,43 @@ void printStrBW(char* str) {
 }
 
 void printNewLine() {
+    updateTextCursor(CURSOR_NEWLINE);
 	currentX = BORDER_PADDING;
 	currentY += CHAR_HEIGHT + VERTICAL_PADDING;
 }
 
 void printNewLineWPrompt() {
     printNewLine();
-    displayPrompt("sebascaules", "kernel", "~");
+    displayPrompt("username", "kernel", "~");
+    currentLinePosition = 0;
 }
 
 void printTab() {
 	printStrBW("    ");
+    updateTextCursor(CURSOR_TYPING);
+}
+
+uint8_t canDelete() {
+    return currentLinePosition > 0;
 }
 
 void deleteChar() {
-    if(currentX == BORDER_PADDING){
-        currentX = WINDOW_WIDTH - BORDER_PADDING - CHAR_WIDTH - 3;
-        currentY -= CHAR_HEIGHT + VERTICAL_PADDING;
-    }else {
-        currentX -= CHAR_WIDTH;
+    if (!canDelete()) {
+        return;
     }
-    drawRectangle(currentX, currentY - CHAR_HEIGHT, CHAR_WIDTH, CHAR_HEIGHT, 0x00000000);
+    // if (currentX == BORDER_PADDING) {
+    //     currentX = WINDOW_WIDTH - BORDER_PADDING - CHAR_WIDTH - 3;
+    //     currentY -= CHAR_HEIGHT + VERTICAL_PADDING;
+    // } else {
+    //     currentX -= CHAR_WIDTH - HORIZONTAL_PADDING;
+    // }
+
+    // cambio. no soporta muchas lineas. arreglar. no entiendo el codigo anterior.
+    // currentY -= CHAR_HEIGHT + VERTICAL_PADDING;
+    currentX -= CHAR_WIDTH + HORIZONTAL_PADDING;
+    drawRectangle(currentX, currentY - (CHAR_HEIGHT), CHAR_WIDTH, CHAR_HEIGHT, 0x00000000);
+    updateTextCursor(CURSOR_DELETING);
+    currentLinePosition--;
 }
 
 void clear() {
@@ -156,6 +183,27 @@ void drawRectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint
     }
 }
 
+void updateTextCursor(CursorMovementType movementType) {
+    uint64_t xOffset = 0, yOffset = 0;
+    switch (movementType) {
+        case CURSOR_DELETING:
+            xOffset = CHAR_WIDTH + 1.5 * HORIZONTAL_PADDING;
+            break;
+        case CURSOR_TYPING:
+            xOffset = -(CHAR_WIDTH + HORIZONTAL_PADDING / 2);
+            break;
+        case CURSOR_NEWLINE:
+            xOffset = HORIZONTAL_PADDING / 2;
+        case CURSOR_MOVING:
+            // Para cuando usemos las flechas?
+            break;
+        default:
+            break;
+    }
+    drawRectangle(currentX + HORIZONTAL_PADDING / 2, currentY - CHAR_HEIGHT, 1, CHAR_HEIGHT, 0xFFFFFFFF); // place new one
+    drawRectangle(currentX + xOffset, currentY - CHAR_HEIGHT + yOffset, 1, CHAR_HEIGHT, 0x00000000); // remove previous one
+}
+
 //Ej: sebascaules@kernel:~$ "codigo usuario"
 void displayPrompt(char* username, char* hostname, char*currentDir) {
     if(currentX == BORDER_PADDING){
@@ -167,6 +215,7 @@ void displayPrompt(char* username, char* hostname, char*currentDir) {
         printCharBW('$');
         printCharBW(' ');
     }
+    currentLinePosition = 0;
 }
 
 
