@@ -86,6 +86,9 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
     case '\t':
         printTab();
         return 4;
+    case ' ':
+        currentLinePosition++;
+        break;
     default:
         break;
     }
@@ -96,21 +99,20 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
     }
 
     // Chequea que la palabra no se pase de los margenes de la pantalla
-    if (currentX + CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
+    if (currentX + CHAR_WIDTH + HORIZONTAL_PADDING > WINDOW_WIDTH - BORDER_PADDING) {
         // Si no hay espacio para la plabra salta de linea
         currentX = BORDER_PADDING;
         currentY += CHAR_HEIGHT + VERTICAL_PADDING;
-        
     }
 
     if (currentY + CHAR_HEIGHT > WINDOW_HEIGHT - BORDER_PADDING) {
         clear();
         currentY = BORDER_PADDING; //Hay que hacer el scroll aca
     }
-
-    drawChar(c, currentX, currentY, fgcolor, bgcolor);
-    updateTextCursor(currentLinePosition);
-    currentX += CHAR_WIDTH;
+    currentLinePosition++;
+    drawChar(c, currentX + HORIZONTAL_PADDING, currentY, fgcolor, bgcolor);
+    currentX += CHAR_WIDTH + HORIZONTAL_PADDING;
+    updateTextCursor(CURSOR_TYPING);
     return 1;
 }
 
@@ -136,9 +138,9 @@ void printStrBW(char* str) {
 }
 
 void printNewLine() {
-    updateTextCursor(CURSOR_NEWLINE);
 	currentX = BORDER_PADDING;
 	currentY += CHAR_HEIGHT + VERTICAL_PADDING;
+    updateTextCursor(CURSOR_NEWLINE);
 }
 
 void printNewLineWPrompt() {
@@ -149,6 +151,7 @@ void printNewLineWPrompt() {
 
 void printTab() {
     currentX += 2 * CHAR_WIDTH;
+    updateTextCursor(CURSOR_TYPING);
 }
 
 uint8_t canDelete() {
@@ -159,15 +162,6 @@ void deleteChar() {
     if (!canDelete()) {
         return;
     }
-    // if (currentX == BORDER_PADDING) {
-    //     currentX = WINDOW_WIDTH - BORDER_PADDING - CHAR_WIDTH - 3;
-    //     currentY -= CHAR_HEIGHT + VERTICAL_PADDING;
-    // } else {
-    //     currentX -= CHAR_WIDTH - HORIZONTAL_PADDING;
-    // }
-
-    // cambio. no soporta muchas lineas. arreglar. no entiendo el codigo anterior.
-    // currentY -= CHAR_HEIGHT + VERTICAL_PADDING;
     currentX -= CHAR_WIDTH + HORIZONTAL_PADDING;
     drawRectangle(currentX, currentY - (CHAR_HEIGHT), CHAR_WIDTH, CHAR_HEIGHT, 0x00000000);
     updateTextCursor(CURSOR_DELETING);
