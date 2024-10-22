@@ -64,7 +64,7 @@ typedef enum CursorMovementType {
     CURSOR_TYPING,
     CURSOR_DELETING,
     CURSOR_NEWLINE,
-    CURSOR_MOVING
+    CURSOR_MOVING,
 } CursorMovementType;
 
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
@@ -78,7 +78,7 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 uint64_t printChar(char c, int fgcolor, int bgcolor) {
     switch (c) {
     case '\n':
-        printNewLine();
+        printNewLineWPrompt();
         return 1;
     case '\b':
         deleteChar();
@@ -86,6 +86,8 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
     case '\t':
         printTab();
         return 4;
+        // sacar?
+        // NO USAR PORQUE SE ROMPE TODO
     case ' ':
         currentLinePosition++;
         break;
@@ -138,9 +140,9 @@ void printStrBW(char* str) {
 }
 
 void printNewLine() {
+    updateTextCursor(CURSOR_NEWLINE);
 	currentX = BORDER_PADDING;
 	currentY += CHAR_HEIGHT + VERTICAL_PADDING;
-    updateTextCursor(CURSOR_NEWLINE);
 }
 
 void printNewLineWPrompt() {
@@ -150,8 +152,8 @@ void printNewLineWPrompt() {
 }
 
 void printTab() {
-    currentX += 2 * CHAR_WIDTH;
-    updateTextCursor(CURSOR_TYPING);
+    // currentX += 4 * CHAR_WIDTH;
+    // updateTextCursor(CURSOR_TAB); // no va lo suficiente hacia atras para borrar
 }
 
 uint8_t canDelete() {
@@ -191,6 +193,7 @@ void updateTextCursor(CursorMovementType movementType) {
             break;
         case CURSOR_NEWLINE:
             xOffset = HORIZONTAL_PADDING / 2;
+            break;
         case CURSOR_MOVING:
             // Para cuando usemos las flechas?
             break;
