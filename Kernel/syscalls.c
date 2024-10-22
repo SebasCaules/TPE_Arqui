@@ -4,7 +4,6 @@
 #include "keyboard.h"
 #include "syscalls.h"
 
-
 uint64_t sysCallHandler(uint64_t id, ...) {
     va_list args;
     va_start(args, id);

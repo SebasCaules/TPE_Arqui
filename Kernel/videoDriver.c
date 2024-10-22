@@ -6,8 +6,6 @@
 #define BORDER_PADDING 15
 #define VERTICAL_PADDING 4
 #define HORIZONTAL_PADDING 2
-#define CHAR_HEIGHT 16
-#define CHAR_WIDTH 8
 #define WHITE 0x00FFFFFF
 #define BLACK 0x00000000
 #define BUFFER_SIZE 256
@@ -54,6 +52,7 @@ typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
+uint8_t fontScale = 1; // NUMERO ENTERO
 uint64_t currentX = BORDER_PADDING;
 uint64_t currentY = BORDER_PADDING;
 uint64_t currentLinePosition = 0;
@@ -98,10 +97,10 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
     }
 
     // Chequea que la palabra no se pase de los margenes de la pantalla
-    if (currentX + CHAR_WIDTH + HORIZONTAL_PADDING > WINDOW_WIDTH - BORDER_PADDING) {
+    if (currentX + CHAR_WIDTH * fontScale + HORIZONTAL_PADDING> WINDOW_WIDTH - BORDER_PADDING) {
         // Si no hay espacio para la plabra salta de linea
         currentX = BORDER_PADDING;
-        currentY += CHAR_HEIGHT + VERTICAL_PADDING;
+        currentY += (CHAR_HEIGHT + VERTICAL_PADDING) * fontScale;
     }
 
     if (currentY + CHAR_HEIGHT > WINDOW_HEIGHT - BORDER_PADDING) {
@@ -109,8 +108,8 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
         currentY = BORDER_PADDING; //Hay que hacer el scroll aca
     }
     currentLinePosition++;
-    drawChar(c, currentX + HORIZONTAL_PADDING, currentY, fgcolor, bgcolor);
-    currentX += CHAR_WIDTH + HORIZONTAL_PADDING;
+    drawChar(c, currentX + HORIZONTAL_PADDING, currentY, fgcolor, bgcolor, fontScale);
+    currentX += (CHAR_WIDTH * fontScale + HORIZONTAL_PADDING);
     updateTextCursor(CURSOR_TYPING);
     return 1;
 }
@@ -139,7 +138,7 @@ void printStrBW(char* str) {
 void printNewLine() {
     updateTextCursor(CURSOR_NEWLINE);
 	currentX = BORDER_PADDING;
-	currentY += CHAR_HEIGHT + VERTICAL_PADDING;
+	currentY += (CHAR_HEIGHT + VERTICAL_PADDING) * fontScale;
 }
 
 void printNewLineWPrompt() {
@@ -161,8 +160,8 @@ void deleteChar() {
     if (!canDelete()) {
         return;
     }
-    currentX -= CHAR_WIDTH + HORIZONTAL_PADDING;
-    drawRectangle(currentX, currentY - (CHAR_HEIGHT), CHAR_WIDTH, CHAR_HEIGHT, 0x00000000);
+    currentX -= CHAR_WIDTH * fontScale + HORIZONTAL_PADDING;
+    drawRectangle(currentX, currentY, CHAR_WIDTH * fontScale, CHAR_HEIGHT * fontScale, 0x00000000); // ACA
     updateTextCursor(CURSOR_DELETING);
     currentLinePosition--;
 }
@@ -183,10 +182,10 @@ void updateTextCursor(CursorMovementType movementType) {
     uint64_t xOffset = 0, yOffset = 0;
     switch (movementType) {
         case CURSOR_DELETING:
-            xOffset = CHAR_WIDTH + 1.5 * HORIZONTAL_PADDING;
+            xOffset = (CHAR_WIDTH * fontScale + 1.5 * HORIZONTAL_PADDING);
             break;
         case CURSOR_TYPING:
-            xOffset = -(CHAR_WIDTH + HORIZONTAL_PADDING / 2);
+            xOffset = -(CHAR_WIDTH * fontScale + HORIZONTAL_PADDING / 2);
             break;
         case CURSOR_NEWLINE:
             xOffset = HORIZONTAL_PADDING / 2;
@@ -197,8 +196,8 @@ void updateTextCursor(CursorMovementType movementType) {
         default:
             break;
     }
-    drawRectangle(currentX + HORIZONTAL_PADDING / 2, currentY - CHAR_HEIGHT, 1, CHAR_HEIGHT, 0xFFFFFFFF); // place new one
-    drawRectangle(currentX + xOffset, currentY - CHAR_HEIGHT + yOffset, 1, CHAR_HEIGHT, 0x00000000); // remove previous one
+    drawRectangle(currentX + HORIZONTAL_PADDING / 2, currentY, 1, CHAR_HEIGHT * fontScale, 0xFFFFFFFF); // place new one
+    drawRectangle(currentX + xOffset, currentY + yOffset, 1, CHAR_HEIGHT * fontScale, 0x0000000); // remove previous one
 }
 
 //Ej: sebascaules@kernel:~$ "codigo usuario"
@@ -213,6 +212,10 @@ void displayPrompt(char* username, char* hostname, char*currentDir) {
         printCharBW(' ');
     }
     currentLinePosition = 0;
+}
+
+void setFontScale(uint8_t scale) {
+    fontScale = scale;
 }
 
 
