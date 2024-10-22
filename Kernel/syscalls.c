@@ -16,9 +16,9 @@ uint64_t sysCallHandler(uint64_t id, ...) {
         char *buffer = va_arg(args, char *);
         uint64_t count = va_arg(args, uint64_t);
         if (id == 3)
-            ret = read(fd, buffer, count);
+            ret = sys_read(fd, buffer, count);
         else
-            ret = write(fd, buffer, count);
+            ret = sys_write(fd, buffer, count);
         break;
     default:
         break;

@@ -108,7 +108,8 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
         currentY = BORDER_PADDING; //Hay que hacer el scroll aca
     }
 
-    drawchar(c, currentX, currentY, fgcolor, bgcolor);
+    drawChar(c, currentX, currentY, fgcolor, bgcolor);
+    updateTextCursor(currentLinePosition);
     currentX += CHAR_WIDTH;
     return 1;
 }
@@ -148,6 +149,10 @@ void printNewLineWPrompt() {
 
 void printTab() {
     currentX += 2 * CHAR_WIDTH;
+}
+
+uint8_t canDelete() {
+    return currentLinePosition > 0;
 }
 
 void deleteChar() {
