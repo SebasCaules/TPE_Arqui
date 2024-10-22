@@ -84,7 +84,7 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
         deleteChar();
         return -1;
     case '\t':
-        return;
+        return 0;
         // En la terminal el tab no anda asi
         // printTab();
         // return 4;
