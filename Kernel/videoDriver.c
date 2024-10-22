@@ -4,10 +4,13 @@
 
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
-#define BORDER_PADDING 50
+#define BORDER_PADDING 15
 #define VERTICAL_PADDING 4
 #define CHAR_HEIGHT 16
 #define CHAR_WIDTH 8
+#define WHITE 0x00FFFFFF
+#define BLACK 0x00000000
+#define BUFFER_SIZE 256
 
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -51,6 +54,11 @@ typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
+int currentX = BORDER_PADDING;
+int currentY = BORDER_PADDING;
+
+static char buffer[BUFFER_SIZE] = { '0' };
+
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     uint8_t * framebuffer = (uint8_t *) VBE_mode_info->framebuffer;
     uint64_t offset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
@@ -59,163 +67,153 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
 
-uint16_t getWidth() {
-	return VBE_mode_info->width;
-}
-
-uint16_t getHeight() {
-	return VBE_mode_info->height;
-}
-
-int currentX = BORDER_PADDING;
-int currentY = BORDER_PADDING;
-
-
-// Global variables to store the current position
-void printStr(char* str, int fgcolor, int bgcolor) {
-    while (*str) {
-        // Handle newlines in the string
-        if (*str == '\n') {
-            currentX = BORDER_PADDING;  // Reset x to the left margin
-            currentY += CHAR_HEIGHT + VERTICAL_PADDING;  // Move y to the next line with padding
-            str++;  // Move to the next character
-            continue;
-        }
-
-        // Find the length of the next word (sequence of non-space characters)
-        int word_start = 0;
-        while (str[word_start] && str[word_start] != ' ' && str[word_start] != '\n') {
-            word_start++;
-        }
-        int word_length = word_start;
-
-        // Check if the word fits in the remaining space on the current line
-        if (currentX + word_length * CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
-            // Move to the next line if the word doesn't fit
-            currentX = BORDER_PADDING;  // Reset to the start of the new line
-            currentY += CHAR_HEIGHT + VERTICAL_PADDING;  // Move to the next line with padding
-        }
-
-        // Check if we're hitting the bottom boundary
-        if (currentY + CHAR_HEIGHT > WINDOW_HEIGHT - BORDER_PADDING) {
-            // Stop printing if we're beyond the allowed window space
-            return;
-        }
-
-        // Print the word character by character
-        for (int i = 0; i < word_length; i++) {
-            drawchar(str[i], currentX, currentY, fgcolor, bgcolor);
-            currentX += CHAR_WIDTH;
-        }
-
-        // Skip consecutive spaces and handle them as a single space
-        str += word_length;
-        if (*str == ' ') {
-            // Handle the first space after the word
-            if (currentX + CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
-                currentX = BORDER_PADDING;  // Reset x to the start of the next line
-                currentY += CHAR_HEIGHT + VERTICAL_PADDING;  // Move to the next line with padding
-            } else {
-                currentX += CHAR_WIDTH;  // Move x for the space
-            }
-
-            // Skip any consecutive spaces after the first one
-            while (*str == ' ') {
-                str++;  // Skip multiple spaces
-            }
-        }
-    }
-}
-
-void printCharBW(char c) {
-    // Define character width, height, and space limits
-    const int charWidth = 8;
-    const int charHeight = 16;
-
+void printChar(char c, int fgcolor, int bgcolor) {
     // Check if the character is a space or newline
     if (c == ' ') {
         // Handle space character by advancing the current position
-        currentX += charWidth;
+        currentX += CHAR_WIDTH;
     } else if (c == '\n') {
         // Handle newline by resetting x position and moving to the next line
         currentX = BORDER_PADDING;
-        currentY += charHeight + VERTICAL_PADDING;
+        currentY += CHAR_HEIGHT + VERTICAL_PADDING;
     } else {
         // Check if the character will go out of bounds and wrap if needed
-        if (currentX + charWidth > WINDOW_WIDTH - BORDER_PADDING) {
+        if (currentX + CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
             // Move to the next line if no space for the character
             currentX = BORDER_PADDING;
-            currentY += charHeight + VERTICAL_PADDING;
+            currentY += CHAR_HEIGHT + VERTICAL_PADDING;
         }
         
         // Call drawchar() to print the character at the current position
-        drawchar(c, currentX, currentY, 0x00FFFFFF, 0x00000000);
+        drawchar(c, currentX, currentY, fgcolor, bgcolor);
         
         // Update currentX for the next character
-        currentX += charWidth;
+        currentX += CHAR_WIDTH;
     }
     
     // Check if we go beyond the window height
-    if (currentY + charHeight > WINDOW_HEIGHT - BORDER_PADDING) {
+    if (currentY + CHAR_HEIGHT > WINDOW_HEIGHT - BORDER_PADDING) {
         // Reset Y position or handle screen overflow as necessary
         currentY = BORDER_PADDING;  // Optionally reset or scroll
     }
 }
 
-void printStrBW(char* str){
-	uint32_t foregroundColor = 0x00FFFFFF; // White color in RGB
-    uint32_t backgroundColor = 0x00000000; // Black color in RGB
-	printStr(str, foregroundColor, backgroundColor);
+void printCharBW(char c){
+    printChar(c, WHITE, BLACK);
 }
 
-void printNewLine(){
+void printStr(char* str, int fgcolor, int bgcolor) {
+    while(*str){
+        printChar(*str++, fgcolor, bgcolor);
+    }
+}
+
+uint64_t printStrByLength(char* str, int fgcolor, int bgcolor, int length){
+    // uint64_t i, printed = 0;
+	// for (i = 0; i < length && str[i] != 0; i++)
+	// 	printed += printChar(str[i], fgcolor, bgcolor);
+	// return printed;
+    return 0;
+}
+
+void printStrBW(char* str) {
+	printStr(str, WHITE, BLACK);
+}
+
+void printNewLine() {
 	currentX = BORDER_PADDING;
 	currentY += CHAR_HEIGHT + VERTICAL_PADDING;
 }
 
-void printTab(){
-	for (int i = 0; i < 4; i++) {
-		printCharBW(' ');
-	}
+void printNewLineWPrompt() {
+    printNewLine();
+    displayPrompt("sebascaules", "kernel", "~");
+}
+
+void printTab() {
+	printStrBW("    ");
+}
+
+void deleteChar() {
+    if(currentX == BORDER_PADDING){
+        currentX = WINDOW_WIDTH - BORDER_PADDING - CHAR_WIDTH - 3;
+        currentY -= CHAR_HEIGHT + VERTICAL_PADDING;
+    }else {
+        currentX -= CHAR_WIDTH;
+    }
+    drawRectangle(currentX, currentY - CHAR_HEIGHT, CHAR_WIDTH, CHAR_HEIGHT, 0x00000000);
+}
+
+void clear() {
+    drawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0x00000000);
 }
 
 void drawRectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color) {
-    for (uint64_t i = 0; i < width; i++) {
-        for (uint64_t j = 0; j < height; j++) {
+    for (uint64_t i = 0; i <= width; i++) {
+        for (uint64_t j = 0; j <= height; j++) {
             putPixel(color, x + i, y + j);
         }
     }
 }
 
-void deleteChar() {
-    currentX -= CHAR_WIDTH;
-    drawRectangle(currentX, currentY - CHAR_HEIGHT, CHAR_WIDTH, CHAR_HEIGHT, 0x00000000);
-}
-
-void reverseStr(char *str, int length) {
-    int start = 0;
-    int end = length - 1;
-    while (start < end) {
-        char temp = str[start];
-        str[start] = str[end];
-        str[end] = temp;
-        start++;
-        end--;
+//Ej: sebascaules@kernel:~$ "codigo usuario"
+void displayPrompt(char* username, char* hostname, char*currentDir) {
+    if(currentX == BORDER_PADDING){
+        printStrBW(username);
+        printCharBW('@');
+        printStrBW(hostname);
+        printCharBW(':');
+        printStrBW(currentDir);
+        printCharBW('$');
+        printCharBW(' ');
     }
 }
 
-void intToStr(int num, char *str) {
-    int i = 0;
-    do {
-        str[i++] = (num % 10) + '0';
-        num /= 10;
-    } while (num > 0);
-    str[i] = '\0';
-    reverseStr(str, i);
+
+// Imprimir numeros
+static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base) {
+	char *p = buffer;
+	char *p1, *p2;
+	uint32_t digits = 0;
+
+	//Calculate characters for each digit
+	do {
+		uint32_t remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	}
+	while (value /= base);
+
+	// Terminate string in buffer.
+	*p = 0;
+
+	//Reverse string in buffer.
+	p1 = buffer;
+	p2 = p - 1;
+	while (p1 < p2) {
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
+
+	return digits;
 }
 
-void printInt(int num){
-    char aux[20];
-    intToStr(num, aux);
-    printStrBW(aux);
+void printDec(uint64_t value) {
+    printBase(value, 10);
+}
+
+void printHex(uint64_t value) {
+    printBase(value, 16);
+}
+
+void printBin(uint64_t value) { 
+    printBase(value, 2);
+}
+
+void printBase(uint64_t value, uint32_t base) {
+    uintToBase(value, buffer, base);
+    ncPrint(buffer);
 }

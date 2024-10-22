@@ -6,11 +6,6 @@ static unsigned long ticks = 0;
 
 void timer_handler() {
 	ticks++;
-	if(ticks % 18 == 0 && ticks != 0){
-		char str[20];
-		intToStr(ticks/18, str);
-		//printStrBW(str);
-	}
 }
 
 int ticks_elapsed() {

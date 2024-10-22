@@ -49,6 +49,9 @@ void * initializeKernelBinary() {
 
 int main() {
 	load_idt();
+	displayPrompt("sebascaules", "kernel", "~");
+
+
 	while(1);
 	return 0;
 }

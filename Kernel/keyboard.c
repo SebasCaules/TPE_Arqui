@@ -117,6 +117,9 @@ void pressedKey(){
     case BACKSPACE:
         deleteChar();
         break;
+	case ENTER:
+		printNewLineWPrompt();
+		return;
     default:
         break;
     }
@@ -135,4 +138,8 @@ void pressedKey(){
         }
         current %= BUFFER_SIZE; //Limpia ciclicamente el current
     }
+}
+
+char bufferNext(){
+	return buffer[current - 1];
 }

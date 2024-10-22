@@ -17,9 +17,6 @@ MAKE_TOOLCHAIN_EXIT_CODE=$?
 docker exec -it $CONTAINER_NAME make -C /root
 MAKE_ROOT_EXIT_CODE=$?
 
-# Stop the Docker container
-docker stop $CONTAINER_NAME
-
 # Check if both make commands were successful
 if [[ $MAKE_TOOLCHAIN_EXIT_CODE -eq 0 && $MAKE_ROOT_EXIT_CODE -eq 0 ]]; then
     # Run the script if both make commands succeeded
@@ -27,3 +24,6 @@ if [[ $MAKE_TOOLCHAIN_EXIT_CODE -eq 0 && $MAKE_ROOT_EXIT_CODE -eq 0 ]]; then
 else
     echo "One or both make commands failed. Not running ./run.sh"
 fi
+
+# Stop the Docker container
+docker stop $CONTAINER_NAME
