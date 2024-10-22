@@ -22,7 +22,7 @@ void printInt(int num);
 
 void displayPrompt(char* username, char* hostname, char*currentDir);
 
-void printChar(char c, int fgcolor, int bgcolor);
+uint64_t printChar(char c, int fgcolor, int bgcolor);
 
 void printNewLineWPrompt();
 

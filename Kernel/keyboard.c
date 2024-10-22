@@ -86,7 +86,7 @@ static unsigned char keyValues[NKEYS][2] = {
 
 char isSpecialKey(int key) {
 	return key == L_SHIFT_PRESS || key == R_SHIFT_PRESS || 
-    key == CAPS_LOCK_PRESS || key == ALT_PRESS || key == ESC || key == BACKSPACE;
+    key == CAPS_LOCK_PRESS || key == ALT_PRESS || key == ESC;
 }
 
 static char buffer[BUFFER_SIZE];
@@ -111,15 +111,6 @@ void pressedKey(){
     case CAPS_LOCK_PRESS:
         capsLockFlag = !capsLockFlag;
         break;
-    case TAB:
-        printTab();
-        break;
-    case BACKSPACE:
-        deleteChar();
-        break;
-	case ENTER:
-		printNewLineWPrompt();
-		return;
     default:
         break;
     }

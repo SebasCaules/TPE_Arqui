@@ -67,35 +67,42 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
 
-void printChar(char c, int fgcolor, int bgcolor) {
-    // Check if the character is a space or newline
-    if (c == ' ') {
-        // Handle space character by advancing the current position
-        currentX += CHAR_WIDTH;
-    } else if (c == '\n') {
-        // Handle newline by resetting x position and moving to the next line
+uint64_t printChar(char c, int fgcolor, int bgcolor) {
+    switch (c) {
+    case '\n':
+        printNewLine();
+        return 1;
+    case '\b':
+        deleteChar();
+        return -1;
+    case '\t':
+        printTab();
+        return 4;
+    default:
+        break;
+    }
+
+    // Si es un caracter ASCII no imprimible devuelve 0
+    if (c <= 31){
+        return 0;
+    }
+
+    // Chequea que la palabra no se pase de los margenes de la pantalla
+    if (currentX + CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
+        // Si no hay espacio para la plabra salta de linea
         currentX = BORDER_PADDING;
         currentY += CHAR_HEIGHT + VERTICAL_PADDING;
-    } else {
-        // Check if the character will go out of bounds and wrap if needed
-        if (currentX + CHAR_WIDTH > WINDOW_WIDTH - BORDER_PADDING) {
-            // Move to the next line if no space for the character
-            currentX = BORDER_PADDING;
-            currentY += CHAR_HEIGHT + VERTICAL_PADDING;
-        }
         
-        // Call drawchar() to print the character at the current position
-        drawchar(c, currentX, currentY, fgcolor, bgcolor);
-        
-        // Update currentX for the next character
-        currentX += CHAR_WIDTH;
     }
-    
-    // Check if we go beyond the window height
+
     if (currentY + CHAR_HEIGHT > WINDOW_HEIGHT - BORDER_PADDING) {
-        // Reset Y position or handle screen overflow as necessary
-        currentY = BORDER_PADDING;  // Optionally reset or scroll
+        clear();
+        currentY = BORDER_PADDING; //Hay que hacer el scroll aca
     }
+
+    drawchar(c, currentX, currentY, fgcolor, bgcolor);
+    currentX += CHAR_WIDTH;
+    return 1;
 }
 
 void printCharBW(char c){
@@ -109,11 +116,10 @@ void printStr(char* str, int fgcolor, int bgcolor) {
 }
 
 uint64_t printStrByLength(char* str, int fgcolor, int bgcolor, int length){
-    // uint64_t i, printed = 0;
-	// for (i = 0; i < length && str[i] != 0; i++)
-	// 	printed += printChar(str[i], fgcolor, bgcolor);
-	// return printed;
-    return 0;
+    uint64_t i, printed = 0;
+	for (i = 0; i < length && str[i] != 0; i++)
+		printed += printChar(str[i], fgcolor, bgcolor);
+	return printed;
 }
 
 void printStrBW(char* str) {
@@ -131,7 +137,7 @@ void printNewLineWPrompt() {
 }
 
 void printTab() {
-	printStrBW("    ");
+    currentX += 2 * CHAR_WIDTH;
 }
 
 void deleteChar() {
