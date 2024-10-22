@@ -18,5 +18,7 @@ void drawRectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint
 
 void intToStr(int num, char *str);
 
+void printInt(int num);
+
 
 

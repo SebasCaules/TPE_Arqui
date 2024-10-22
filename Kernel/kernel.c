@@ -20,7 +20,6 @@ static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
 
 #define VIDEO_MEMORY 0xB8000
-#define WHITE_ON_GREEN 0xA2  // 0xA2 is white background and green text
 
 typedef int (*EntryPoint)();
 
@@ -50,17 +49,6 @@ void * initializeKernelBinary() {
 
 int main() {
 	load_idt();
-
-	printCharBW('A');
-	printCharBW('a');
-	printStrBW("hola, como estas?! 1234");
-	printNewLine();
-	printCharBW('a');
-	printTab();
-	printCharBW('a');
-
-
 	while(1);
-
 	return 0;
 }
