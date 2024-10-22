@@ -84,13 +84,10 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
         deleteChar();
         return -1;
     case '\t':
-        printTab();
-        return 4;
-        // sacar?
-        // NO USAR PORQUE SE ROMPE TODO
-    case ' ':
-        currentLinePosition++;
-        break;
+        return;
+        // En la terminal el tab no anda asi
+        // printTab();
+        // return 4;
     default:
         break;
     }
