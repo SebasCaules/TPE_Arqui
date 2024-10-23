@@ -54,10 +54,24 @@ int main() {
 
 	printCharBW(' ');
 
-	printf("Hola %d<->%d, %s, \n", 64, 99, "Hola, mundo!");
+    // Test cases
+    printf("%d %d %d \n", 20, 20);  // Should print error about missing arguments
+    printf("%d %d %d \n", 20, 20, 20, 20);  // Should print error about too many arguments
+    printf("%d %d %s \n", 20, 20, 20);  // Should print error about type mismatch
 
-	double n1 = 50.1, n2 = 10.0;
-	printf("%d", (uint64_t) (n1*n2));
+	// double n1 = 50.1, n2 = 10.0;
+	// printf("%d", (uint64_t) (n1*n2));
+	//NO ANDA
+
+	// double g = 20.0;
+	// printf("%g double", 10);
+	// printf("%g double", 1);
+	// printf("%g double", 20);
+	// printf("%g double", 1954);
+	// printf("%g double", g);
+	// float f = 10.5;
+	// printf("%f float", f);
+
 
 	while(1);
 	return 0;

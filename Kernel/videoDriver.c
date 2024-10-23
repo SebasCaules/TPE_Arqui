@@ -52,7 +52,7 @@ typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
-uint8_t fontScale = 2; // NUMERO ENTERO
+uint8_t fontScale = 1; // NUMERO ENTERO
 uint64_t currentX = BORDER_PADDING;
 uint64_t currentY = BORDER_PADDING;
 uint64_t currentLinePosition = 0;
