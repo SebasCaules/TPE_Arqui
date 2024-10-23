@@ -6,6 +6,8 @@
 #define LOWEST_MODIFIER 99
 #define BUFFER_SIZE 1024
 
+// userland
+
 typedef enum {
 	INT_TYPE = 0,
 	FLOAT_TYPE,
@@ -16,7 +18,9 @@ typedef enum {
 
 char mods[NOFMODS] = { 0 };
 
-//Hay que hacerla bien
+uint64_t syscall(uint64_t rax, uint64_t rbx, uint64_t rdx, uint64_t rcx);
+
+// Hay que hacerla bien
 uint64_t checkNmbArgs(va_list ap, uint64_t expectedNmb){
 	int argd;
 	float argf;
@@ -163,15 +167,23 @@ int	printf(const char * str, ...) {
     return sysCallHandler(4, STDOUT, buffer, length);
 }
 
-int	 scanf(const char * __restrict, ...) {
+int scanf(const char * __restrict, ...) {
 
 }
 
-int	 getchar(void) {
+int getchar(void) {
 
 }
 
-int	 putchar(int) {
+int putchar(int) {
 
+}
+
+int strcmp(const char * str1, const char * str2) {
+	while (*str1 && (*str1 == *str2)) {
+		str1++;
+		str2++;
+	}
+	return *(unsigned char *)str1 - *(unsigned char *)str2;
 }
 

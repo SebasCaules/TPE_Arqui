@@ -52,7 +52,7 @@ typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
-uint8_t fontScale = 1; // NUMERO ENTERO
+uint8_t fontScale = 2; // NUMERO ENTERO
 uint64_t currentX = BORDER_PADDING;
 uint64_t currentY = BORDER_PADDING;
 uint64_t currentLinePosition = 0;
@@ -97,7 +97,7 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
     }
 
     // Chequea que la palabra no se pase de los margenes de la pantalla
-    if (currentX + CHAR_WIDTH * fontScale + HORIZONTAL_PADDING> WINDOW_WIDTH - BORDER_PADDING) {
+    if (currentX + CHAR_WIDTH * fontScale + HORIZONTAL_PADDING > WINDOW_WIDTH - BORDER_PADDING) {
         // Si no hay espacio para la plabra salta de linea
         currentX = BORDER_PADDING;
         currentY += (CHAR_HEIGHT + VERTICAL_PADDING) * fontScale;
@@ -160,7 +160,18 @@ void deleteChar() {
     if (!canDelete()) {
         return;
     }
-    currentX -= CHAR_WIDTH * fontScale + HORIZONTAL_PADDING;
+    
+    // no anda del todo bien todavia
+    // Check if we are at the beginning of the line
+    if (currentX <= BORDER_PADDING) {
+        // Move to the previous line
+        currentY -= (CHAR_HEIGHT + VERTICAL_PADDING) * fontScale;
+        // Set currentX to the end of the previous line
+        currentX = WINDOW_WIDTH - BORDER_PADDING - CHAR_WIDTH * fontScale - HORIZONTAL_PADDING;
+    } else {
+        // Regular delete on the same line
+        currentX -= CHAR_WIDTH * fontScale + HORIZONTAL_PADDING;
+    }
     drawRectangle(currentX, currentY, CHAR_WIDTH * fontScale, CHAR_HEIGHT * fontScale, 0x00000000); // ACA
     updateTextCursor(CURSOR_DELETING);
     currentLinePosition--;
