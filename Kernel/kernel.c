@@ -6,6 +6,7 @@
 
 #include <videoDriver.h>
 #include "idtLoader.h"
+#include "stdLib.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -50,7 +51,10 @@ void * initializeKernelBinary() {
 int main() {
 	load_idt();
 	displayPrompt("username", "kernel", "~");
-	
+
+	printCharBW(' ');
+
+	printf("Hola %d<->%d, %s, \n", 64, 99, "Hola, mundo!");
 
 	while(1);
 	return 0;
