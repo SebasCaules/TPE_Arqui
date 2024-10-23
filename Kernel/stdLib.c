@@ -211,15 +211,13 @@ int scanf(const char * str, ...) {
 			
 		}
 	}
+}
 	
 
 uint64_t readLine(char buffer[], uint64_t count) {
 
 }
 
-int scanf(const char * __restrict, ...) {
-
-}
 
 int getSingleChar(void) {
 	uint8_t c;
