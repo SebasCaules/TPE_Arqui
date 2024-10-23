@@ -6,12 +6,12 @@
 #define LOWEST_MODIFIER 99
 #define BUFFER_SIZE 1024
 
-typedef enum {
-	STDIN = 0,
-    STDOUT,
-    STDERR,
-    STDMARK,
-} fileDesc;
+// typedef enum {
+// 	STDIN = 0,
+//     STDOUT,
+//     STDERR,
+//     STDMARK,
+// } fileDesc;
 
 // userland
 typedef enum {
@@ -171,16 +171,35 @@ int	printf(const char * str, ...) {
     return sysCallHandler(4, STDOUT, buffer, length);
 }
 
+uint64_t readLine(char buffer[], uint64_t count) {
+
+}
+
 int scanf(const char * __restrict, ...) {
 
 }
 
-int getchar(void) {
-
+int getSingleChar(void) {
+	uint8_t c;
+	while (sysCallHandler(3, STDIN, &c, 1) < 1);
+	return c;
 }
 
-int putchar(int) {
+int getchar(void) {
+	int c = getSingleChar();
+	int n = getSingleChar();
+	if (n == '\n') {
+		printf("second IS new line");
+		return c;
+	}
+	printf("second IS NOT new line");
+	return -1;
+}
 
+int putchar(int c) {
+	char buffer[1] = {c};
+	sysCallHandler(4, STDOUT, buffer, 1);
+	return c;
 }
 
 int strcmp(const char * str1, const char * str2) {
