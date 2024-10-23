@@ -9,6 +9,6 @@
 #define CHAR_WIDTH 8
 #define CHAR_HEIGHT 16
 
-void drawChar(unsigned char c, int x, int y, int fgcolor, int bgcolor);
+void drawChar(unsigned char c, int x, int y, int fgcolor, int bgcolor, int scale);
 
 #endif
