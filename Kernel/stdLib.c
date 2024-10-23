@@ -6,8 +6,14 @@
 #define LOWEST_MODIFIER 99
 #define BUFFER_SIZE 1024
 
-// userland
+typedef enum {
+	STDIN = 0,
+    STDOUT,
+    STDERR,
+    STDMARK,
+} fileDesc;
 
+// userland
 typedef enum {
 	INT_TYPE = 0,
 	FLOAT_TYPE,
@@ -89,8 +95,7 @@ uint64_t typeToBuffer(char* buffer, uint64_t length, va_list ap, Types type){
 
 	char numberFlag = 0;
 
-	switch (type)
-	{
+	switch (type) {
 	case INT_TYPE:
 		int intNum = va_arg(ap, int);
 		auxLength = intToString(intNum, auxBuffer);
@@ -154,7 +159,6 @@ int	printf(const char * str, ...) {
             case 's':
 				length = typeToBuffer(buffer, length, ap, STR_TYPE);
                 break;
-            
             default:
                 break;
             }
