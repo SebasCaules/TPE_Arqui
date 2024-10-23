@@ -1,7 +1,5 @@
 #include <stdint.h>
-
-#define HEIGHT_BITMAP 16
-#define NCHARS 95
+#include "font.h"
 
 uint8_t font_bitmap[NCHARS][HEIGHT_BITMAP] = {
     // ASCII 32: ' ' (space)
@@ -385,14 +383,42 @@ uint8_t font_bitmap[NCHARS][HEIGHT_BITMAP] = {
 
 };
 
-void drawChar(unsigned char c, int x, int y, int fgcolor, int bgcolor) {
-	int cx,cy;
-	int mask[8]={128,64,32,16,8,4,2,1};
-	unsigned char *glyph=font_bitmap[c - 32];
+// void drawChar(unsigned char c, int x, int y, int fgcolor, int bgcolor) {
+// 	int cx,cy;
+// 	int mask[8]={128,64,32,16,8,4,2,1};
+// 	unsigned char *glyph=font_bitmap[c - 32];
 
-    for(cy=0;cy<16;cy++){
-        for(cx=0;cx<8;cx++){
-            putPixel(glyph[cy]&mask[cx]?fgcolor:bgcolor,x+cx,y+cy-12);
+//     for(cy=0;cy<16;cy++){
+//         for(cx=0;cx<8;cx++){
+//             putPixel(glyph[cy]&mask[cx]?fgcolor:bgcolor,x+cx,y+cy-12);
+//         }
+//     }
+// }
+
+void drawChar(unsigned char c, int x, int y, int fgcolor, int bgcolor, int scale) {
+    int cx, cy, dx, dy;
+    unsigned char *glyph = font_bitmap[c - 32];
+
+    // Loop through each row of the glyph (16 rows)
+    for (cy = 0; cy < CHAR_HEIGHT; cy++) {
+        // Loop through each column of the glyph (8 columns)
+        for (cx = 0; cx < CHAR_WIDTH; cx++) {
+            // Check if the pixel at (cx, cy) in the glyph is part of the character
+            if (glyph[cy] & (1 << (7 - cx))) {
+                // Draw the scaled pixel
+                for (dy = 0; dy < scale; dy++) {
+                    for (dx = 0; dx < scale; dx++) {
+                        putPixel(fgcolor, x + cx * scale + dx, y + (cy * scale) + dy); // Corrected vertical position
+                    }
+                }
+            } else {
+                // Draw the background for the scaled pixel
+                for (dy = 0; dy < scale; dy++) {
+                    for (dx = 0; dx < scale; dx++) {
+                        putPixel(bgcolor, x + cx * scale + dx, y + (cy * scale) + dy); // Corrected vertical position
+                    }
+                }
+            }
         }
     }
 }
