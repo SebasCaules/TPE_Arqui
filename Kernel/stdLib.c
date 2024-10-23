@@ -213,15 +213,35 @@ int scanf(const char * str, ...) {
 	}
 	
 
+uint64_t readLine(char buffer[], uint64_t count) {
 
+}
+
+int scanf(const char * __restrict, ...) {
+
+}
+
+int getSingleChar(void) {
+	uint8_t c;
+	while (sysCallHandler(3, STDIN, &c, 1) < 1);
+	return c;
 }
 
 int getchar(void) {
-
+	int c = getSingleChar();
+	int n = getSingleChar();
+	if (n == '\n') {
+		printf("second IS new line");
+		return c;
+	}
+	printf("second IS NOT new line");
+	return -1;
 }
 
-int putchar(int) {
-
+int putchar(int c) {
+	char buffer[1] = {c};
+	sysCallHandler(4, STDOUT, buffer, 1);
+	return c;
 }
 
 int strcmp(const char * str1, const char * str2) {

@@ -4,7 +4,8 @@
 #include <stdint.h>
 
 typedef enum {
-    STDOUT = 1,
+    STDIN = 0,
+    STDOUT,
     STDERR,
     STDMARK,
 } fileDesc;

@@ -6,4 +6,5 @@ extern int getPressedKey();
 void pressedKey();
 
 char bufferNext();
+
 #endif
