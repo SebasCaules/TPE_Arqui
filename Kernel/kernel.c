@@ -56,6 +56,9 @@ int main() {
 
 	printf("Hola %d<->%d, %s, \n", 64, 99, "Hola, mundo!");
 
+	double n1 = 50.1, n2 = 10.0;
+	printf("%d", (uint64_t) (n1*n2));
+
 	while(1);
 	return 0;
 }
