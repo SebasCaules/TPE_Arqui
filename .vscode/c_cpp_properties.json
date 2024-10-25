@@ -4,7 +4,8 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Kernel/include"
+                "${workspaceFolder}/Kernel/include",
+                "${workspaceFolder}/4_Userland/shellCodeModule/1_include"
             ],
             "defines": [],
             "macFrameworkPath": [

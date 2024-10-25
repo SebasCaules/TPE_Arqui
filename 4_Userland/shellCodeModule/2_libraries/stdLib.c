@@ -1,6 +1,6 @@
 #include "stdlib.h"
 #include <stdarg.h>
-#include "syscallsInt.h"
+#include <syscallsInt.h>
 
 #define NOFMODS 5
 #define LOWEST_MODIFIER 99
@@ -254,7 +254,7 @@ int puts(const char *str) {
     return putchar('\n');
 }
 
-char* gets(char* buffer, int n) {
+int gets(char* buffer, int n) {
     int c;
     int i = 0;
 
@@ -271,7 +271,7 @@ char* gets(char* buffer, int n) {
     putchar('\n');
     buffer[i] = '\0';
 
-    return buffer;
+    return i;
 }
 
 
@@ -283,11 +283,8 @@ int strcmp(const char *str1, const char *str2) {
     return *(unsigned char *)str1 - *(unsigned char *)str2;
 }
 
+void getInput(char* buffer, int length){
+    gets(buffer, length);
 
-void interactive_keyboard() {
-    char c;
-    while ((c = getchar()) != '\n'){
-        putchar(c);
-    }
 }
 

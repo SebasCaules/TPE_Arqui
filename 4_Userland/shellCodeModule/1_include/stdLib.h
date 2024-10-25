@@ -4,6 +4,8 @@
 #ifndef TPE_ARQUI_STDLIB_H
 #define TPE_ARQUI_STDLIB_H
 
+uint64_t strlen(const char *str);
+
 int	printf(const char * str, ...);
 
 int getchar();
@@ -16,7 +18,7 @@ int putsNoNewLine(const char *str);
 
 int puts(const char *str);
 
-char *gets(char *buffer, int n);
+int gets(char *buffer, int n);
 
 int strcmp(const char *str1, const char *str2);
 
