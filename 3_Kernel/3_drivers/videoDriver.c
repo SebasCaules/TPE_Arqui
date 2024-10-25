@@ -10,7 +10,7 @@
 #define BLACK 0x00000000
 #define BUFFER_SIZE 256
 #define MIN_FONT_SCALE 1
-#define MAX_FONT_SCALE 3
+#define MAX_FONT_SCALE 2
 
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
