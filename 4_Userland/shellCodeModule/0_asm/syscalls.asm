@@ -1,5 +1,6 @@
 GLOBAL sys_read
 GLOBAL sys_write
+GLOBAL sys_set_font_scale
 
 section .text
 
@@ -101,3 +102,6 @@ sys_write:
     mov rsp, rbp
     pop rbp
     ret
+
+sys_set_font_scale:
+    simple_sys_handler 2

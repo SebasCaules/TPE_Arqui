@@ -6,7 +6,7 @@
 typedef enum {
     SLEEP = 0,
     TIME,
-    PLACEHOLDER,
+    SETFONT,
     READ,
     WRITE
 } syscallsNum;
@@ -19,6 +19,9 @@ typedef struct {
 uint64_t sysCallHandler(Registers * regs) {
     uint64_t ret;
     switch (regs->rax) {
+    case 2:
+        ret = sys_set_font_scale(regs->rdi);
+        break;
     case 3:
         ret = sys_read(regs->rdi, regs->rsi, regs->rdx);
         break;
@@ -47,4 +50,8 @@ int64_t sys_read(uint64_t fd, uint16_t * buffer, uint64_t length) {
 int64_t sys_write(uint64_t fd, uint16_t * buffer, uint64_t length) {
     uint32_t fileDescriptorStyle[] = {0, 0x00FFFFFF, 0x00FF0000, 0x0000FF00};
     return printStrByLength(buffer, fileDescriptorStyle[fd], 0x00000000, length);
+}
+
+int64_t sys_set_font_scale(uint64_t scale) {
+    return setFontScale(scale);
 }

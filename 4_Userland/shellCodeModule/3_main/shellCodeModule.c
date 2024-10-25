@@ -2,10 +2,7 @@
 
 #define WELCOME_MESSAGE "Bienvenido a la terminal!\n"
 #define PROMPT "%s@userland ~ $ "
-
-#define MAX_COMMAND_LENGTH 128
-#define MAX_USERNAME_LENGTH 32
-#define NUM_MODULES 1
+#define NUM_MODULES 2
 
 typedef struct module {
     char *name;
@@ -14,20 +11,19 @@ typedef struct module {
 
 static char username[MAX_USERNAME_LENGTH];
 
-
 static void help() {
-    puts("\nComandos disponibles:\n\n");
-    puts("- help: Muestra todos los modulos disponibles del sistema operativo.\n");
-    puts("- time: Muestra la hora actual del sistema.\n");
-    puts("- clear: Limpia la pantalla.\n");
+    puts("\nComandos disponibles:\n");
+    puts("- help: Muestra todos los modulos disponibles del sistema operativo.");
+    puts("- time: Muestra la hora actual del sistema.");
+    puts("- clear: Limpia la pantalla.");
+    putchar('\n');
 }
 
 static module modules[] = {
-    {"help", help}
+    {"help", help},
     // {"time", showcurrentTime},
     // {"eliminator", eliminator},
-    // {"zoomin", zoomIn},
-    // {"zoomout", zoomOut},
+    {"setfont", setFontScale},
     // {"getregs", getRegs},
     // {"dividebyzero", div0},
     // {"opcode", op_code},
@@ -36,7 +32,7 @@ static module modules[] = {
 };
 
 void askForUser() {
-    puts("Porfavor ingrese su nombre de usuario: \t");
+    putsNoNewLine("Ingrese su nombre de usuario: ");
     gets(username, MAX_USERNAME_LENGTH);
 }
 
@@ -44,20 +40,39 @@ void prompt() {
     printf(PROMPT, username);
 }
 
+void commandLine() {
+
+}
+
 void getCmdInput() {
     prompt();
-    char cmdBuffer[MAX_COMMAND_LENGTH + 1];
-    gets(cmdBuffer, MAX_COMMAND_LENGTH);
-    if(strlen(cmdBuffer) == 0){
+    char command[MAX_COMMAND_LENGTH + 1];
+    gets(command, MAX_COMMAND_LENGTH);
+    if(strlen(command) == 0){
         return;
     }
-    for(int i = 0; i < NUM_MODULES; i++){
-        if(strcmp(cmdBuffer,modules[i].name)==0){
-            modules[i].function();
+    char words[MAX_WORDS][MAX_WORD_LENGTH];
+    int wordCount = splitString(command, words);
+
+    for (int i = 0; i < NUM_MODULES; i++) {
+        
+    }
+
+    if (strcmp(words[0], modules[0].name) == 0) {
+        modules[0].function();
+        return;
+    }
+
+    if (strcmp(words[0], modules[1].name) == 0) {
+        if (wordCount != 2) {
+            puts("Invalid command. (setfont <scale>)");
             return;
         }
+        changeFontScale(stringToInt(words[1]));
+        return;
     }
-    printf("Command not found: %s\n", cmdBuffer); //Hay que agarrar solo la primera palabra
+    
+    printf("Command not found: %s\n", words[0]); // Hay que agarrar solo la primera palabra
 }
 
 // imprime lo que el usuario escribio. para testeo.
@@ -74,6 +89,14 @@ void getAndPrintInput() {
     buffer[i] = 0;
     putchar('\n');
     puts(buffer);
+}
+
+void changeFontScale(int scale) {
+    printf("%d", scale);
+    int returnValue = setFontScale(scale);
+    if (returnValue == -1) {
+        puts("Invalid font scale. Provide a number between 1 and 3");
+    }
 }
 
 // static void toUtcMinus3(time_struct * time) {
@@ -112,4 +135,3 @@ int main() {
         getCmdInput();
     }
 }
-

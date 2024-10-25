@@ -285,6 +285,76 @@ int strcmp(const char *str1, const char *str2) {
 
 void getInput(char* buffer, int length){
     gets(buffer, length);
+}
 
+int isspace(int c) {
+    return (c == ' ' || c == '\t' || c == '\n' ||
+            c == '\v' || c == '\f' || c == '\r');
+}
+
+int splitString(const char* str, char words[MAX_WORDS][MAX_WORD_LENGTH]) {
+    int wordCount = 0;
+    int charIndex = 0;
+    
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (isspace(str[i])) {
+            // If we're at a space and a word has been started, end the current word
+            if (charIndex > 0) {
+                words[wordCount][charIndex] = '\0'; // Null-terminate the word
+                wordCount++;  // Move to the next word
+                charIndex = 0;  // Reset character index for the next word
+
+                // Ensure we don't exceed the maximum word count
+                if (wordCount >= MAX_WORDS) {
+                    break;
+                }
+            }
+        } else {
+            // Add character to the current word if within max length
+            if (charIndex < MAX_WORD_LENGTH - 1) {
+                words[wordCount][charIndex++] = str[i];
+            }
+        }
+    }
+
+    // Add the last word if it wasn't followed by whitespace
+    if (charIndex > 0 && wordCount < MAX_WORDS) {
+        words[wordCount][charIndex] = '\0';
+        wordCount++;
+    }
+
+    return wordCount;
+}
+
+int stringToInt(const char *str) {
+    int result = 0;
+    int i = 0;
+
+    // Skip leading whitespaces
+    while (str[i] == ' ') {
+        i++;
+    }
+
+    // Check if the string is empty after trimming spaces
+    if (str[i] == '\0') {
+        return -1;  // Return -1 for empty or invalid input
+    }
+
+    // Convert each character to integer
+    while (str[i] >= '0' && str[i] <= '9') {
+        result = result * 10 + (str[i] - '0');
+        i++;
+    }
+
+    // If we encounter any non-numeric characters, return -1
+    if (str[i] != '\0') {
+        return -1;
+    }
+
+    return result;
+}
+
+int setFontScale(int scale) {
+    return sys_set_font_scale(scale);
 }
 
