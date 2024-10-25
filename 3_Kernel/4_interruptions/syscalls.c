@@ -26,8 +26,11 @@ uint64_t sysCallHandler(Registers * regs) {
 int64_t sys_read(uint64_t fd, uint16_t * buffer, uint64_t length) {
     unsigned char character;
     uint64_t i = 0;
-    while (i < length && (character = bufferNext()) != 0)
-    {
+    while (i < length && (character = bufferNext()) != 0) {
+        if (character == '\r' || character == '\n') {
+            buffer[i++] = '\n';  // Store newline in buffer
+            break;               // Exit on newline
+        }
         buffer[i++] = character;
     }
     return i;

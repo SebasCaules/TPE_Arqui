@@ -14,7 +14,7 @@ int scanf(const char *format, ...);
 
 int puts(const char *str);
 
-char *gets(char *str);
+char *gets(char *buffer, int n);
 
 int strcmp(const char *str1, const char *str2);
 

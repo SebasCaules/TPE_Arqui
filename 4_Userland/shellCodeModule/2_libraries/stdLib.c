@@ -237,14 +237,24 @@ int puts(const char *str) {
     return putchar('\n');
 }
 
-char *gets(char *str) {
-    char *s = str;
-    char c;
-    while ((c = getchar()) != '\n' && c != EOF) {
-        *s++ = c;
+char* gets(char* buffer, int n) {
+    int c;
+    int i = 0;
+
+    while ((c = getchar()) != '\n') {
+        if (c == '\b' && i > 0) {
+            putchar(c);
+            i--;
+        }
+        if (c != '\b' && i < n - 1) {
+            putchar(c);
+            buffer[i++] = (char)c;
+        }
     }
-    *s = '\0';
-    return str;
+    putchar('\n');
+    buffer[i] = '\0';
+
+    return buffer;
 }
 
 
