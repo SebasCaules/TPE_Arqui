@@ -2,6 +2,9 @@
     "files.associations": {
         "stdarg.h": "c",
         "stdio.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "syscallsint.h": "c",
+        "stdint.h": "c",
+        "syscalls.h": "c"
     }
 }

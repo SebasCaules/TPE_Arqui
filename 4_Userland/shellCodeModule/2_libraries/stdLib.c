@@ -39,6 +39,14 @@ void reverseStr(char* buffer, uint64_t length){
     }
 }
 
+uint64_t strlen(const char *str) {
+    const char *s = str;
+    while (*s) {
+        ++s;
+    }
+    return s - str;
+}
+
 uint64_t intToString(int value, char* buffer, uint64_t length) {
     int isNegative = 0;
     uint64_t i = length;
@@ -212,28 +220,37 @@ int scanf(const char *format, ...) {
 }
 
 int getchar() {
-    char c;
-    if (sys_read(STDIN, &c, 1) > 0) {
-        return c;
-    } else {
-        return EOF;
-    }
+    // char c;
+    // if (sys_read(STDIN, &c, 1) > 0) {
+    //     return c;
+    // } else {
+    //     return EOF;
+    // }
+    uint16_t c;
+    while( sys_read(STDIN, &c, 1) == 0 || c > 255 );
+    return (char) c;
 }
 
 int putchar(char c) {
-    if (sys_write(STDOUT, &c, 1) > 0) {
-        return c;
-    } else {
-        return EOF;
-    }
+    // if (sys_write(STDOUT, &c, 1) > 0) {
+    //     return c;
+    // } else {
+    //     return EOF;
+    // }
+    sys_write(STDOUT, &c, 1);
 }
 
-
+int putsNoNewLine(const char *str) {
+    int len;
+    while (*str) {
+        putchar(*str++);
+        len++;
+    }
+    return len;
+}
 
 int puts(const char *str) {
-    while (*str) {
-        if (putchar(*str++) == EOF) return EOF;
-    }
+    putsNoNewLine(str);
     return putchar('\n');
 }
 

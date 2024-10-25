@@ -12,6 +12,8 @@ int putchar(char c);
 
 int scanf(const char *format, ...);
 
+int putsNoNewLine(const char *str);
+
 int puts(const char *str);
 
 char *gets(char *buffer, int n);
