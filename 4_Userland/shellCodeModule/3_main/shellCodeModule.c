@@ -31,10 +31,11 @@ static module modules[] = {
 };
 
 static void help() {
-    puts("Comandos disponibles:\n");
-    puts("- help: Muestra todos los modulos disponibles del sistema operativo.\n");
-    puts("- time: Muestra la hora actual del sistema.\n");
-    puts("- clear: Limpia la pantalla.\n");
+    puts("Available Commands: ");
+    puts("  time            - Display the current system time.");
+    puts("  setfont <scale> - Adjust the font size. Replace <scale> with 1 or 2.");
+    puts("  clear           - Clear the terminal screen.");
+    puts("  getregs         - Display the contents of the CPU's registers.");
 }
 
 void showTime() {
@@ -55,7 +56,7 @@ void getRegs() {
 }
 
 void askForUser() {
-    putsNoNewLine("Ingrese su nombre de usuario: ");
+    putsNoNewLine("Enter a username: ");
     gets(username, MAX_USERNAME_LENGTH);
 }
 
@@ -83,7 +84,6 @@ void getCmdInput() {
             return;
         }
     }
-
 
     if (strcmp(words[0], modules[2].name) == 0) {
         if (wordCount != 2) {
@@ -134,6 +134,7 @@ int main() {
     puts(WELCOME_MESSAGE);
     showTime();
     askForUser();
+    putchar('\n');
     help();
     putchar('\n');
 

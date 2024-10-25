@@ -65,7 +65,8 @@ typedef enum CursorMovementType {
     CURSOR_TYPING,
     CURSOR_DELETING,
     CURSOR_NEWLINE,
-    CURSOR_MOVING,
+    CURSOR_PREVIOUS,
+    CURSOR_MOVING
 } CursorMovementType;
 
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
@@ -98,6 +99,7 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
     // Chequea que la palabra no se pase de los margenes de la pantalla
     if (currentX + CHAR_WIDTH * fontScale + HORIZONTAL_PADDING > WINDOW_WIDTH - BORDER_PADDING) {
         // Si no hay espacio para la plabra salta de linea
+        updateTextCursor(CURSOR_NEWLINE);
         currentX = BORDER_PADDING;
         currentY += (CHAR_HEIGHT + VERTICAL_PADDING) * fontScale;
     }
@@ -158,10 +160,11 @@ void deleteChar() {
     if (!canDelete()) {
         return;
     }
-    
+
     // no anda del todo bien todavia
     // Check if we are at the beginning of the line
     if (currentX <= BORDER_PADDING) {
+        updateTextCursor(CURSOR_PREVIOUS);
         // Move to the previous line
         currentY -= (CHAR_HEIGHT + VERTICAL_PADDING) * fontScale;
         // Set currentX to the end of the previous line
@@ -201,19 +204,23 @@ void updateTextCursor(CursorMovementType movementType) {
     uint64_t xOffset = 0, yOffset = 0;
     switch (movementType) {
         case CURSOR_DELETING:
-            xOffset = (CHAR_WIDTH * fontScale + 1.5 * HORIZONTAL_PADDING);
-            break;
+        xOffset = (CHAR_WIDTH * fontScale + 1.5 * HORIZONTAL_PADDING);
+        break;
         case CURSOR_TYPING:
-            xOffset = -(CHAR_WIDTH * fontScale + HORIZONTAL_PADDING / 2);
-            break;
+        xOffset = -(CHAR_WIDTH * fontScale + HORIZONTAL_PADDING / 2);
+        break;
         case CURSOR_NEWLINE:
-            xOffset = HORIZONTAL_PADDING / 2;
-            break;
+        xOffset = HORIZONTAL_PADDING / 2;
+        break;
         case CURSOR_MOVING:
-            // Para cuando usemos las flechas?
-            break;
+        // Para cuando usemos las flechas?
+        break;
+        case CURSOR_PREVIOUS:
+        // code
+        drawRectangle(BORDER_PADDING + HORIZONTAL_PADDING / 2, currentY, 1, CHAR_HEIGHT * fontScale, 0x00000000);
+        return;
         default:
-            break;
+        break;
     }
     drawRectangle(currentX + HORIZONTAL_PADDING / 2, currentY, 1, CHAR_HEIGHT * fontScale, 0xFFFFFFFF); // place new one
     drawRectangle(currentX + xOffset, currentY + yOffset, 1, CHAR_HEIGHT * fontScale, 0x0000000); // remove previous one
