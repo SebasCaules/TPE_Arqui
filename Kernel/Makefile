@@ -1,30 +1,64 @@
 include Makefile.inc
 
 KERNEL=kernel.bin
-SOURCES=$(wildcard *.c)
-SOURCES_ASM=$(wildcard asm/*.asm)
-OBJECTS=$(SOURCES:.c=.o)
-OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
+
+# Define source directories
+INCLUDE_DIR=include
+ASM_DIR=asm
+DRIVERS_DIR=drivers
+INTERRUPTIONS_DIR=interruptions
+LIB_DIR=libraries
+
+# Source files
+ROOT_SOURCES=$(wildcard *.c)
+DRIVER_SOURCES=$(wildcard $(DRIVERS_DIR)/*.c)
+INTERRUPTIONS_SOURCES=$(wildcard $(INTERRUPTIONS_DIR)/*.c)
+LIB_SOURCES=$(wildcard $(LIB_DIR)/*.c)
+SOURCES_ASM=$(wildcard $(ASM_DIR)/*.asm)
+
+# Object files
+ROOT_OBJECTS=$(patsubst %.c,%.o,$(ROOT_SOURCES))
+DRIVER_OBJECTS=$(patsubst $(DRIVERS_DIR)/%.c,$(DRIVERS_DIR)/%.o,$(DRIVER_SOURCES))
+INTERRUPTIONS_OBJECTS=$(patsubst $(INTERRUPTIONS_DIR)/%.c,$(INTERRUPTIONS_DIR)/%.o,$(INTERRUPTIONS_SOURCES))
+LIB_OBJECTS=$(patsubst $(LIB_DIR)/%.c,$(LIB_DIR)/%.o,$(LIB_SOURCES))
+OBJECTS_ASM=$(patsubst $(ASM_DIR)/%.asm,$(ASM_DIR)/%.o,$(SOURCES_ASM))
+
 LOADERSRC=loader.asm
-
 LOADEROBJECT=$(LOADERSRC:.asm=.o)
-STATICLIBS=
 
+# Target
 all: $(KERNEL)
 
-$(KERNEL): $(LOADEROBJECT) $(OBJECTS) $(STATICLIBS) $(OBJECTS_ASM)
-	$(LD) $(LDFLAGS) -T kernel.ld -o $(KERNEL) $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(STATICLIBS)
+# Link the binary
+$(KERNEL): $(LOADEROBJECT) $(ROOT_OBJECTS) $(DRIVER_OBJECTS) $(INTERRUPTIONS_OBJECTS) $(LIB_OBJECTS) $(OBJECTS_ASM)
+	$(LD) $(LDFLAGS) -T kernel.ld -o $(KERNEL) $(LOADEROBJECT) $(ROOT_OBJECTS) $(DRIVER_OBJECTS) $(INTERRUPTIONS_OBJECTS) $(LIB_OBJECTS) $(OBJECTS_ASM)
 
+# Compile C files in root
 %.o: %.c
-	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
-%.o : %.asm
+# Compile C files in drivers
+$(DRIVERS_DIR)/%.o: $(DRIVERS_DIR)/%.c
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+
+# Compile C files in interruptions
+$(INTERRUPTIONS_DIR)/%.o: $(INTERRUPTIONS_DIR)/%.c
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+
+# Compile C files in libraries
+$(LIB_DIR)/%.o: $(LIB_DIR)/%.c
+	$(GCC) $(GCCFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+
+# Assemble ASM files
+$(ASM_DIR)/%.o: $(ASM_DIR)/%.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
 
+# Assemble loader.asm (which is in the root directory)
 $(LOADEROBJECT):
 	$(ASM) $(ASMFLAGS) $(LOADERSRC) -o $(LOADEROBJECT)
 
+# Clean the build
 clean:
-	rm -rf asm/*.o *.o *.bin
+	rm -rf $(ASM_DIR)/*.o $(DRIVERS_DIR)/*.o $(INTERRUPTIONS_DIR)/*.o $(LIB_DIR)/*.o *.o *.bin
 
 .PHONY: all clean

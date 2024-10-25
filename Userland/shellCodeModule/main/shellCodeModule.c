@@ -1,4 +1,3 @@
-/* sampleCodeModule.c */
 #include <stdLib.h>
 
 #define WELCOME "Bienvenido a la terminal!\n"
