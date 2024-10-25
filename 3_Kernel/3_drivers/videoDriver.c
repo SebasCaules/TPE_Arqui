@@ -9,6 +9,8 @@
 #define WHITE 0x00FFFFFF
 #define BLACK 0x00000000
 #define BUFFER_SIZE 256
+#define MIN_FONT_SCALE 1
+#define MAX_FONT_SCALE 3
 
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -186,6 +188,15 @@ void drawRectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint
     }
 }
 
+int64_t setFontScale(uint64_t scale) {
+    if (scale < MIN_FONT_SCALE || scale > MAX_FONT_SCALE) {
+        return -1;
+    }
+    fontScale = scale;
+    clear();
+    return 0;
+}
+
 void updateTextCursor(CursorMovementType movementType) {
     uint64_t xOffset = 0, yOffset = 0;
     switch (movementType) {
@@ -221,11 +232,6 @@ void displayPrompt(char* username, char* hostname, char*currentDir) {
     }
     currentLinePosition = 0;
 }
-
-void setFontScale(uint8_t scale) {
-    fontScale = scale;
-}
-
 
 // Imprimir numeros
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base) {

@@ -7,7 +7,7 @@
 typedef enum {
     SLEEP = 0,
     TIME,
-    FONT,
+    SETFONT,
     READ,
     WRITE,
     CLEAR
@@ -22,13 +22,12 @@ uint64_t sysCallHandler(Registers * regs) {
     uint64_t ret;
     switch (regs->rax) {
     case TIME: return sys_time(regs->rdi);
+    case SETFONT: return sys_set_font_scale(regs->rdi);
     case READ: return sys_read(regs->rdi, regs->rsi, regs->rdx);
     case WRITE: return sys_write(regs->rdi, regs->rsi, regs->rdx);      
     case CLEAR: return sys_clear();
     default: return 0;
-        break;
     }
-    return ret;
 }
 
 int64_t sys_time(time_struct* time) {
@@ -39,6 +38,10 @@ int64_t sys_time(time_struct* time) {
     time->month = getRTCMonth();
     time->year = getRTCYear();
     return 0;
+}
+
+int64_t sys_set_font_scale(uint64_t scale) {
+    return setFontScale(scale);
 }
 
 int64_t sys_read(uint64_t fd, uint16_t * buffer, uint64_t length) {
@@ -63,3 +66,4 @@ int64_t sys_clear() {
     clear();
     return 0;
 }
+

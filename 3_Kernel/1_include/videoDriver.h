@@ -36,4 +36,5 @@ void printBin(uint64_t value);
 
 uint64_t printStrByLength(char* str, int fgcolor, int bgcolor, int length);
 
+int64_t setFontScale(uint64_t scale);
 

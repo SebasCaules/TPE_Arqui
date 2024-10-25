@@ -2,6 +2,7 @@ GLOBAL sys_time
 GLOBAL sys_read
 GLOBAL sys_write
 GLOBAL sys_clear
+GLOBAL sys_set_font_scale
 
 section .text
 
@@ -87,6 +88,9 @@ section .text
 
 sys_time:
     sys_handler 1
+
+sys_set_font_scale:
+    sys_handler 2
 
 sys_read:
     sys_handler 3
