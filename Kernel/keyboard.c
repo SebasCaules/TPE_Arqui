@@ -91,6 +91,7 @@ char isSpecialKey(int key) {
 
 static char buffer[BUFFER_SIZE];
 static int current = 0;
+static int nextToRead = 0;
 static int nextIndex;
 
 int shiftFlag = 0;
@@ -131,6 +132,12 @@ void pressedKey(){
     }
 }
 
-char bufferNext(){
-	return buffer[current - 1];
+unsigned char bufferNext()
+{
+	if (nextToRead == current)
+		return 0;
+	unsigned char toRet = buffer[nextToRead];
+	buffer[nextToRead++] = 0;
+	nextToRead %= BUFFER_SIZE;
+	return toRet;
 }

@@ -1,5 +1,5 @@
-GLOBAL read
-GLOBAL write
+GLOBAL sys_read
+GLOBAL sys_write
 
 section .text
 
@@ -65,7 +65,26 @@ section .text
     pop rsi
 %endmacro
 
-read:
+
+%macro sys_interrupt 1
+        mov rax, %1
+        int 80h
+%endmacro
+
+
+
+%macro simple_sys_handler 1
+    push rbp
+    mov rbp, rsp
+    mov rax, %1
+    int 80h
+    mov rsp, rbp
+    pop rbp
+    ret
+%endmacro
+
+
+sys_read:
     push rbp
     mov rbp, rsp
     mov rax, 3
@@ -74,7 +93,7 @@ read:
     pop rbp
     ret
 
-write:
+sys_write:
     push rbp
     mov rbp, rsp
     mov rax, 4

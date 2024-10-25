@@ -77,16 +77,13 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 uint64_t printChar(char c, int fgcolor, int bgcolor) {
     switch (c) {
     case '\n':
-        printNewLineWPrompt();
+        printNewLine();
         return 1;
     case '\b':
         deleteChar();
         return -1;
     case '\t':
         return 0;
-        // En la terminal el tab no anda asi
-        // printTab();
-        // return 4;
     default:
         break;
     }
@@ -141,11 +138,11 @@ void printNewLine() {
 	currentY += (CHAR_HEIGHT + VERTICAL_PADDING) * fontScale;
 }
 
-void printNewLineWPrompt() {
-    printNewLine();
-    displayPrompt("username", "kernel", "~");
-    currentLinePosition = 0;
-}
+// void printNewLineWPrompt() {
+//     printNewLine();
+//     displayPrompt("username", "kernel", "~");
+//     currentLinePosition = 0;
+// }
 
 void printTab() {
     // currentX += 4 * CHAR_WIDTH;

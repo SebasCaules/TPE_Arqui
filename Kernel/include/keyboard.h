@@ -5,6 +5,6 @@ extern int getPressedKey();
 
 void pressedKey();
 
-char bufferNext();
+unsigned char bufferNext();
 
 #endif

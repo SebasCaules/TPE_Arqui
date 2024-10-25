@@ -1,16 +1,23 @@
-//
-// Created by Sebastian Caules on 24/10/2024.
-//
+#include <stdarg.h>
+#include <stdint.h>
 
 #ifndef TPE_ARQUI_STDLIB_H
 #define TPE_ARQUI_STDLIB_H
 
-int	printf(const char * str, double num);
+int	printf(const char * str, ...);
 
-int putchar(int c);
+int getchar();
 
-int getchar(void);
+int putchar(char c);
 
-int strcmp(const char * str1, const char * str2);
+int scanf(const char *format, ...);
+
+int puts(const char *str);
+
+char *gets(char *str);
+
+int strcmp(const char *str1, const char *str2);
+
+void interactive_keyboard();
 
 #endif //TPE_ARQUI_STDLIB_H

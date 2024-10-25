@@ -51,6 +51,5 @@ int main() {
 	load_idt();
 	((EntryPoint)sampleCodeModuleAddress)();
 
-	while(1);
 	return 0;
 }
