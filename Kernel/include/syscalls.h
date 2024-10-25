@@ -10,7 +10,7 @@ typedef enum {
     STDMARK,
 } fileDesc;
 
-uint64_t sysCallHandler(uint64_t id, ...);
+// uint64_t sysCallHandler(Registers regs);
 
 int64_t sys_read(uint64_t fd, uint16_t * buffer, uint64_t length);
 

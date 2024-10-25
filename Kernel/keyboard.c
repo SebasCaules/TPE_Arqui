@@ -2,8 +2,6 @@
 #include "videoDriver.h"
 #include "keyboard.h"
 
-#include <stdLib.h>
-
 #define NKEYS 58
 #define BUFFER_SIZE 256
 #define MAX_PRESS_CODE 0x70
@@ -127,13 +125,12 @@ void pressedKey(){
                 index = capsLockFlag ? !shiftFlag : shiftFlag;
             }
             buffer[current++] = keyValues[c][index];
-            printCharBW(buffer[current-1]); //Habra que sacarlo
+            // printCharBW(buffer[current-1]); //Habra que sacarlo
         }
         current %= BUFFER_SIZE; //Limpia ciclicamente el current
     }
 }
 
 char bufferNext(){
-	printf("%c", buffer[current - 1]);
 	return buffer[current - 1];
 }
