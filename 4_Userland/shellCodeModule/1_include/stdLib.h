@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <stdint.h>
+#include <syscallsInt.h>
 
 #ifndef TPE_ARQUI_STDLIB_H
 #define TPE_ARQUI_STDLIB_H

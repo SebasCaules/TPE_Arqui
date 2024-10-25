@@ -102,7 +102,6 @@ uint64_t printChar(char c, int fgcolor, int bgcolor) {
 
     if (currentY + CHAR_HEIGHT > WINDOW_HEIGHT - BORDER_PADDING) {
         clear();
-        currentY = BORDER_PADDING; //Hay que hacer el scroll aca
     }
     currentLinePosition++;
     drawChar(c, currentX + HORIZONTAL_PADDING, currentY, fgcolor, bgcolor, fontScale);
@@ -176,6 +175,7 @@ void deleteChar() {
 
 void clear() {
     drawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0x00000000);
+    currentY = BORDER_PADDING;
 }
 
 void drawRectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color) {

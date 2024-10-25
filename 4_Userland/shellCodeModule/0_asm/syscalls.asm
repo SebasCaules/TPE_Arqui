@@ -1,5 +1,7 @@
+GLOBAL sys_time
 GLOBAL sys_read
 GLOBAL sys_write
+GLOBAL sys_clear
 
 section .text
 
@@ -73,7 +75,7 @@ section .text
 
 
 
-%macro simple_sys_handler 1
+%macro sys_handler 1
     push rbp
     mov rbp, rsp
     mov rax, %1
@@ -83,21 +85,14 @@ section .text
     ret
 %endmacro
 
+sys_time:
+    sys_handler 1
 
 sys_read:
-    push rbp
-    mov rbp, rsp
-    mov rax, 3
-    int 80h
-    mov rsp, rbp
-    pop rbp
-    ret
+    sys_handler 3
 
 sys_write:
-    push rbp
-    mov rbp, rsp
-    mov rax, 4
-    int 80h
-    mov rsp, rbp
-    pop rbp
-    ret
+    sys_handler 4
+
+sys_clear:
+    sys_handler 5

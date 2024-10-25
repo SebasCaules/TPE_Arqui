@@ -1,4 +1,4 @@
-GLOBAL cpuVendor, getSecs, getMins, getHours, getPressedKey
+GLOBAL cpuVendor, rtc, getPressedKey
 
 section .text
 	
@@ -26,44 +26,17 @@ cpuVendor:
 	pop rbp
 	ret
 
+rtc:
+    push rbp
+    mov rbp, rsp
 
-getSecs:
-	push rbp
-	mov rbp, rsp
+    mov al, dil
+    out 70h, al
+    in al, 71h
 
-	mov al, 0x00
-	out 70h, al
-	in al, 71h
-
-	mov rsp, rbp
-	pop rbp
-	ret
-
-
-getMins:
-	push rbp
-	mov rbp, rsp
-
-	mov al, 0x02
-	out 70h, al
-	in al, 71h
-
-	mov rsp, rbp
-	pop rbp
-	ret
-
-getHours:
-	push rbp
-	mov rbp, rsp
-
-	mov al, 0x04
-	out 70h, al
-	in al, 71h
-
-	mov rsp, rbp
-	pop rbp
-	ret
-
+    mov rsp, rbp
+    pop rbp
+    ret
 
 getPressedKey:
 	push rbp
