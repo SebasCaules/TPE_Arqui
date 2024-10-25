@@ -44,10 +44,6 @@ void prompt() {
     printf(PROMPT, username);
 }
 
-void commandLine() {
-
-}
-
 void getCmdInput() {
     prompt();
     char cmdBuffer[MAX_COMMAND_LENGTH + 1];

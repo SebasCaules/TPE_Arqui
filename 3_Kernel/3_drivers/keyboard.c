@@ -132,12 +132,15 @@ void pressedKey(){
     }
 }
 
-unsigned char bufferNext()
-{
-	if (nextToRead == current)
-		return 0;
-	unsigned char toRet = buffer[nextToRead];
-	buffer[nextToRead++] = 0;
-	nextToRead %= BUFFER_SIZE;
-	return toRet;
+unsigned char bufferNext() {
+    if (nextToRead == current) {
+        return 0;
+    }
+    unsigned char toRet = buffer[nextToRead];
+    buffer[nextToRead++] = 0;
+    nextToRead %= BUFFER_SIZE;
+    if (isSpecialKey(toRet)) {
+        return bufferNext(); 
+    }
+    return toRet;
 }
