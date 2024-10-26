@@ -5,6 +5,7 @@
         "stdlib.h": "c",
         "syscallsint.h": "c",
         "stdint.h": "c",
-        "syscalls.h": "c"
+        "syscalls.h": "c",
+        "__availability": "c"
     }
 }

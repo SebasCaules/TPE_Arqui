@@ -4,6 +4,9 @@ GLOBAL sys_write
 GLOBAL sys_clear
 GLOBAL sys_set_font_scale
 GLOBAL sys_draw_rectangle
+GLOBAL sys_tick
+GLOBAL sys_sleep
+GLOBAL sys_reset_cursor
 
 section .text
 
@@ -87,6 +90,9 @@ section .text
     ret
 %endmacro
 
+sys_sleep:
+    sys_handler 0
+
 sys_time:
     sys_handler 1
 
@@ -104,3 +110,9 @@ sys_clear:
 
 sys_draw_rectangle:
     sys_handler 6
+
+sys_tick:
+    sys_handler 7
+
+sys_reset_cursor:
+    sys_handler 8

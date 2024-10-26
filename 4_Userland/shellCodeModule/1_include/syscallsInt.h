@@ -10,6 +10,7 @@ typedef struct time {
     uint8_t hour;
     uint8_t minutes;
     uint8_t seconds;
+
 } time_struct;
 
 int64_t sys_time(time_struct* time);
@@ -23,5 +24,11 @@ int64_t sys_write(uint64_t fd, const char * buffer, uint64_t amount);
 int64_t sys_clear();
 
 int64_t sys_draw_rectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color);
+
+uint64_t sys_tick();
+
+uint64_t sys_sleep(uint64_t milliseconds);
+
+uint64_t sys_reset_cursor();
 
 #endif

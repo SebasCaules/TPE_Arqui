@@ -22,3 +22,7 @@ void nano_sleep(int time){
 		_hlt();
 	}
 }
+
+uint64_t ms_elapsed() {
+	return ticks * 55;
+}

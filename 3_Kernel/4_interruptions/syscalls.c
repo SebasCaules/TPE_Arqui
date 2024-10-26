@@ -3,6 +3,7 @@
 #include <keyboard.h>
 #include <syscalls.h>
 #include <rtc.h>
+#include <time.h>
 
 typedef enum {
     SLEEP = 0,
@@ -11,7 +12,9 @@ typedef enum {
     READ,
     WRITE,
     CLEAR,
-    DRAW_RECTANGLE
+    DRAW_RECTANGLE,
+    TICK,
+    RESET_CURSOR
 } syscallsNum;
 
 
@@ -22,14 +25,30 @@ typedef struct {
 uint64_t sysCallHandler(Registers * regs) {
     uint64_t ret;
     switch (regs->rax) {
+    case SLEEP: return sys_sleep(regs->rdi);
     case TIME: return sys_time(regs->rdi);
     case SETFONT: return sys_set_font_scale(regs->rdi);
     case READ: return sys_read(regs->rdi, regs->rsi, regs->rdx);
     case WRITE: return sys_write(regs->rdi, regs->rsi, regs->rdx);      
     case CLEAR: return sys_clear();
     case DRAW_RECTANGLE: return sys_draw_rectangle(regs->rdi, regs->rsi, regs->rdx, regs->rcx, regs->r8);
+    case TICK: return sys_tick();
+    case RESET_CURSOR: return sys_reset_cursor();
     default: return 0;
     }
+}
+
+uint64_t sys_sleep(uint64_t milliseconds) {
+    unsigned long long initial_time = ms_elapsed();
+    unsigned long long currentTime = initial_time;
+    // Activate interrupts
+    _sti();
+    while ((currentTime - initial_time) <= milliseconds) {
+        currentTime = ms_elapsed();
+    }
+    // Deactivate interrupts
+    _cli();
+    return 1;
 }
 
 int64_t sys_time(time_struct* time) {
@@ -71,6 +90,15 @@ int64_t sys_clear() {
 
 int64_t sys_draw_rectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color) {
     drawRectangle(x, y, width, height, color);
+    return 0;
+}
+
+uint64_t sys_tick() {
+    return ticks_elapsed();
+}
+
+uint64_t sys_reset_cursor() {
+    resetCursor();
     return 0;
 }
 

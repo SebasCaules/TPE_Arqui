@@ -194,6 +194,10 @@ void clear() {
     currentY = BORDER_PADDING;
 }
 
+void resetCursor() {
+    currentY = BORDER_PADDING;
+}
+
 void drawRectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color) {
     for (uint64_t i = 0; i <= width; i++) {
         for (uint64_t j = 0; j <= height; j++) {

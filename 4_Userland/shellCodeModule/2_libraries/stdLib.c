@@ -231,6 +231,10 @@ int getchar() {
     return (char) c;
 }
 
+int readInput(char * c) {
+    return sys_read(STDIN, c, 1);
+}
+
 int putchar(char c) {
     // if (sys_write(STDOUT, &c, 1) > 0) {
     //     return c;
@@ -370,5 +374,13 @@ void clearView() {
 
 void drawRectangle(int x, int y, int width, int height, int color) {
     sys_draw_rectangle(x, y, width, height, color);
+}
+
+void sleep(int milliseconds) {
+    sys_sleep(milliseconds);
+}
+
+void resetCursor() {
+    sys_reset_cursor();
 }
 

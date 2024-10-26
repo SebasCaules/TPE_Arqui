@@ -16,6 +16,8 @@ int	printf(const char * str, ...);
 
 int getchar();
 
+int readInput(char * c);
+
 int putchar(char c);
 
 int scanf(const char *format, ...);
@@ -41,5 +43,9 @@ char toLowercase(char c);
 void clearView();
 
 void drawRectangle(int x, int y, int width, int height, int color);
+
+void sleep(int milliseconds);
+
+void resetCursor();
 
 #endif //TPE_ARQUI_STDLIB_H

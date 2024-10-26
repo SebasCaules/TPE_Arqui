@@ -28,6 +28,8 @@ void printNewLineWPrompt();
 
 void clear();
 
+void resetCursor();
+
 void printDec(uint64_t value);
 
 void printHex(uint64_t value);
