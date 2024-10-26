@@ -31,4 +31,6 @@ uint64_t sys_sleep(uint64_t milliseconds);
 
 uint64_t sys_reset_cursor();
 
+uint64_t sys_beep(uint64_t freq, uint64_t milliseconds);
+
 #endif

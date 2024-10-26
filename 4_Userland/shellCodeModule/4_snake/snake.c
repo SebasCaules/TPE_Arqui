@@ -7,7 +7,7 @@
 #define WINDOW_HEIGHT 768
 
 #define CANVAS_SIDE 768
-#define SQUARE_SIDE 24
+#define SQUARE_SIDE 32
 #define GRID_SIZE (CANVAS_SIDE / SQUARE_SIDE) // queda un grid de 32x32
 
 #define INITIAL_SNAKE_LENGTH 3
@@ -18,7 +18,7 @@
 #define BLUE 0x000000FF
 #define BACKGROUND_COLOR 0x003b3b3b
 
-#define BASE_TIME 500
+#define BASE_TIME 200
 
 // separacion inicial entre las snakes cuando se juega con 2 jugadores
 #define INITIAL_SPACING 4
@@ -75,7 +75,6 @@ void startGame() {
 
     awaitStart();
     play();
-    
 
 }
 
@@ -92,8 +91,8 @@ void awaitStart() {
             clearView();
             drawCanvas();
             gameHasStarted = 1;
-            updatePlayerScores();
             initializeSnakes();
+            updatePlayerScores();
             placeFood();
             break;
         }
@@ -136,13 +135,14 @@ void play() {
         }
 
         sleep(BASE_TIME / difficulty);
-        
+
     }
 }
 
 void checkSnake(Snake * snake) {
     updateSnake(snake);
     if (checkFood(snake)) {
+        beep(500, 200);
         growSnake(snake);
         updateSnake(snake);
         snake->score++;

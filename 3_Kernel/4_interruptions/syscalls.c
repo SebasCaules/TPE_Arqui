@@ -4,6 +4,7 @@
 #include <syscalls.h>
 #include <rtc.h>
 #include <time.h>
+#include <audioDriver.h>
 
 typedef enum {
     SLEEP = 0,
@@ -14,7 +15,8 @@ typedef enum {
     CLEAR,
     DRAW_RECTANGLE,
     TICK,
-    RESET_CURSOR
+    RESET_CURSOR,
+    BEEP
 } syscallsNum;
 
 
@@ -34,6 +36,7 @@ uint64_t sysCallHandler(Registers * regs) {
     case DRAW_RECTANGLE: return sys_draw_rectangle(regs->rdi, regs->rsi, regs->rdx, regs->rcx, regs->r8);
     case TICK: return sys_tick();
     case RESET_CURSOR: return sys_reset_cursor();
+    case BEEP: return sys_beep(regs->rdi, regs->rsi);
     default: return 0;
     }
 }
@@ -99,6 +102,11 @@ uint64_t sys_tick() {
 
 uint64_t sys_reset_cursor() {
     resetCursor();
+    return 0;
+}
+
+uint64_t sys_beep(uint64_t freq, uint64_t milliseconds) {
+    beep(freq, milliseconds);
     return 0;
 }
 
