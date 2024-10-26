@@ -10,7 +10,8 @@ typedef enum {
     SETFONT,
     READ,
     WRITE,
-    CLEAR
+    CLEAR,
+    DRAW_RECTANGLE
 } syscallsNum;
 
 
@@ -26,6 +27,7 @@ uint64_t sysCallHandler(Registers * regs) {
     case READ: return sys_read(regs->rdi, regs->rsi, regs->rdx);
     case WRITE: return sys_write(regs->rdi, regs->rsi, regs->rdx);      
     case CLEAR: return sys_clear();
+    case DRAW_RECTANGLE: return sys_draw_rectangle(regs->rdi, regs->rsi, regs->rdx, regs->rcx, regs->r8);
     default: return 0;
     }
 }
@@ -64,6 +66,11 @@ int64_t sys_write(uint64_t fd, uint16_t * buffer, uint64_t length) {
 
 int64_t sys_clear() {
     clear();
+    return 0;
+}
+
+int64_t sys_draw_rectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color) {
+    drawRectangle(x, y, width, height, color);
     return 0;
 }
 

@@ -3,6 +3,7 @@ GLOBAL sys_read
 GLOBAL sys_write
 GLOBAL sys_clear
 GLOBAL sys_set_font_scale
+GLOBAL sys_draw_rectangle
 
 section .text
 
@@ -100,3 +101,6 @@ sys_write:
 
 sys_clear:
     sys_handler 5
+
+sys_draw_rectangle:
+    sys_handler 6

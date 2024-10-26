@@ -19,6 +19,11 @@
 #define ALT_PRESS 0x3B
 #define ALT_RELEASE 0xB8
 
+#define UP_ARROW 0x48
+#define DOWN_ARROW 0x50
+#define LEFT_ARROW 0x4B
+#define RIGHT_ARROW 0x4D
+
 #define CTRL_PRESS 0x1D
 #define CTRL_RELEASE 0x9D
 
@@ -115,9 +120,9 @@ void pressedKey(){
     default:
         break;
     }
-
-    if(c <= MAX_PRESS_CODE){
-        if(isSpecialKey(c)){
+	
+    if (c <= MAX_PRESS_CODE) {
+        if(isSpecialKey(c)) {
             buffer[current++] = c;
         } else {
             char index = shiftFlag;
@@ -139,6 +144,7 @@ unsigned char bufferNext() {
     unsigned char toRet = buffer[nextToRead];
     buffer[nextToRead++] = 0;
     nextToRead %= BUFFER_SIZE;
+	// ARREGLAR 6 Y ;
     if (isSpecialKey(toRet)) {
         return bufferNext(); 
     }

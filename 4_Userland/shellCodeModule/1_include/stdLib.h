@@ -30,10 +30,16 @@ int strcmp(const char *str1, const char *str2);
 
 void interactive_keyboard();
 
-int setFontScale();
+int setFontScale(int scale);
 
 int stringToInt(const char *str);
 
 int splitString(const char* input, char words[MAX_WORDS][MAX_WORD_LENGTH]);
+
+char toLowercase(char c);
+
+void clearView();
+
+void drawRectangle(int x, int y, int width, int height, int color);
 
 #endif //TPE_ARQUI_STDLIB_H

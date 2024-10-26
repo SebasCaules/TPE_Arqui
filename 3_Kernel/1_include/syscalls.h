@@ -29,4 +29,6 @@ int64_t sys_clear();
 
 int64_t sys_set_font_scale(uint64_t scale);
 
+int64_t sys_draw_rectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color);
+
 #endif // !SYSCALLS_H

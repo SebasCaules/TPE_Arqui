@@ -227,7 +227,7 @@ int getchar() {
     //     return EOF;
     // }
     uint16_t c;
-    while( sys_read(STDIN, &c, 1) == 0 || c > 255 );
+    while (sys_read(STDIN, &c, 1) == 0 || c > 255);
     return (char) c;
 }
 
@@ -273,7 +273,6 @@ int gets(char* buffer, int n) {
 
     return i;
 }
-
 
 int strcmp(const char *str1, const char *str2) {
     while (*str1 && (*str1 == *str2)) {
@@ -354,7 +353,22 @@ int stringToInt(const char *str) {
     return result;
 }
 
+char toLowercase(char c) {
+    if (c >= 'A' && c <= 'Z') {
+        return c + 32;
+    }
+    return c;
+}
+
 int setFontScale(int scale) {
     return sys_set_font_scale(scale);
+}
+
+void clearView() {
+    sys_clear();
+}
+
+void drawRectangle(int x, int y, int width, int height, int color) {
+    sys_draw_rectangle(x, y, width, height, color);
 }
 

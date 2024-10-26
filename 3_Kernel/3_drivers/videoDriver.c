@@ -61,6 +61,17 @@ uint64_t currentLinePosition = 0;
 
 static char buffer[BUFFER_SIZE] = { '0' };
 
+
+// para scroll (dificil)
+#define TEXT_ROWS 37
+#define TEXT_COLS 99
+
+#define TEXT_ROWS_LARGE 19
+#define TEXT_COLS_LARGE 55
+static char bufferMatrix[TEXT_ROWS][TEXT_COLS];
+static uint64_t linesOfText = 1;
+
+
 typedef enum CursorMovementType {
     CURSOR_TYPING,
     CURSOR_DELETING,
@@ -216,7 +227,6 @@ void updateTextCursor(CursorMovementType movementType) {
         // Para cuando usemos las flechas?
         break;
         case CURSOR_PREVIOUS:
-        // code
         drawRectangle(BORDER_PADDING + HORIZONTAL_PADDING / 2, currentY, 1, CHAR_HEIGHT * fontScale, 0x00000000);
         return;
         default:

@@ -1,8 +1,9 @@
 #include <stdLib.h>
+#include <snake.h>
 
 #define WELCOME_MESSAGE "Bienvenido a la terminal!\n"
 #define PROMPT "%s@userland ~ $ "
-#define NUM_MODULES 5
+#define NUM_MODULES 6
 
 typedef struct module {
     char *name;
@@ -17,7 +18,7 @@ void showTime();
 
 static void toUtcMinus3(time_struct * time);
 
-void clearScreen();
+void clearTerminal();
 
 void getRegs();
 
@@ -26,16 +27,19 @@ static module modules[] = {
     {"help", help},
     {"time", showTime},
     {"setfont", setFontScale},
-    {"clear", clearScreen},
-    {"getregs", getRegs}
+    {"clear", clearTerminal},
+    {"getregs", getRegs},
+    {"snake", snake}
 };
 
 static void help() {
     puts("Available Commands: ");
+    puts("  help            - Shows all available commands.");
     puts("  time            - Display the current system time.");
     puts("  setfont <scale> - Adjust the font size. Replace <scale> with 1 or 2.");
     puts("  clear           - Clear the terminal screen.");
     puts("  getregs         - Display the contents of the CPU's registers.");
+    puts("  snake           - Starts the Snake game.");
 }
 
 void showTime() {
@@ -47,8 +51,8 @@ void showTime() {
     return;
 }
 
-void clearScreen() {
-    sys_clear();
+void clearTerminal() {
+    clearView();
 }
 
 void getRegs() {

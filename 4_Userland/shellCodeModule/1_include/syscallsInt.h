@@ -22,4 +22,6 @@ int64_t sys_write(uint64_t fd, const char * buffer, uint64_t amount);
 
 int64_t sys_clear();
 
+int64_t sys_draw_rectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color);
+
 #endif
