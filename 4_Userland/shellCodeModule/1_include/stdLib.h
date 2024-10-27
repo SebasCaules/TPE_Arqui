@@ -1,21 +1,15 @@
-#include <stdarg.h>
 #include <stdint.h>
 #include <syscallsInt.h>
 #include <strLib.h>
+#include <stdarg.h>
 
 #ifndef TPE_ARQUI_STDLIB_H
 #define TPE_ARQUI_STDLIB_H
+#define VRGCLI
 
 #define MAX_COMMAND_LENGTH 128
 #define MAX_USERNAME_LENGTH 32
 #define EOF (-1)
-
-typedef enum {
-	STDIN = 0,
-    STDOUT,
-    STDERR,
-    STDMARK,
-} fileDesc;
 
 typedef enum {
 	INT_TYPE = 0,
@@ -27,6 +21,14 @@ typedef enum {
 	CHAR_TYPE,
 	STR_TYPE,
 } Types;
+
+typedef enum {
+	STDIN = 0,
+    STDOUT,
+    STDERR,
+    STDMARK,
+} fileDesc;
+
 
 /**
  * @brief Prints formatted output to the specified file descriptor.

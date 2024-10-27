@@ -1,54 +1,4 @@
 #include <videoDriver.h>
-#include "font.h"
-
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 768
-#define BORDER_PADDING 15
-#define VERTICAL_PADDING 4
-#define HORIZONTAL_PADDING 2
-#define WHITE 0x00FFFFFF
-#define BLACK 0x00000000
-#define BUFFER_SIZE 256
-#define MIN_FONT_SCALE 1
-#define MAX_FONT_SCALE 2
-
-struct vbe_mode_info_structure {
-	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
-	uint8_t window_a;			// deprecated
-	uint8_t window_b;			// deprecated
-	uint16_t granularity;		// deprecated; used while calculating bank numbers
-	uint16_t window_size;
-	uint16_t segment_a;
-	uint16_t segment_b;
-	uint32_t win_func_ptr;		// deprecated; used to switch banks from protected mode without returning to real mode
-	uint16_t pitch;			// number of bytes per horizontal line
-	uint16_t width;			// width in pixels
-	uint16_t height;			// height in pixels
-	uint8_t w_char;			// unused...
-	uint8_t y_char;			// ...
-	uint8_t planes;
-	uint8_t bpp;			// bits per pixel in this mode
-	uint8_t banks;			// deprecated; total number of banks in this mode
-	uint8_t memory_model;
-	uint8_t bank_size;		// deprecated; size of a bank, almost always 64 KB but may be 16 KB...
-	uint8_t image_pages;
-	uint8_t reserved0;
-
-	uint8_t red_mask;
-	uint8_t red_position;
-	uint8_t green_mask;
-	uint8_t green_position;
-	uint8_t blue_mask;
-	uint8_t blue_position;
-	uint8_t reserved_mask;
-	uint8_t reserved_position;
-	uint8_t direct_color_attributes;
-
-	uint32_t framebuffer;		// physical address of the linear frame buffer; write here to draw to the screen
-	uint32_t off_screen_mem_off;
-	uint16_t off_screen_mem_size;	// size of memory in the framebuffer but not being displayed on the screen
-	uint8_t reserved1[206];
-} __attribute__ ((packed));
 
 typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
@@ -60,16 +10,6 @@ uint64_t currentY = BORDER_PADDING;
 uint64_t currentLinePosition = 0;
 
 static char buffer[BUFFER_SIZE] = { '0' };
-
-
-// para scroll (dificil)
-#define TEXT_ROWS 37
-#define TEXT_COLS 99
-
-#define TEXT_ROWS_LARGE 19
-#define TEXT_COLS_LARGE 55
-static char bufferMatrix[TEXT_ROWS][TEXT_COLS];
-static uint64_t linesOfText = 1;
 
 
 typedef enum CursorMovementType {
@@ -152,17 +92,6 @@ void printNewLine() {
 	currentY += (CHAR_HEIGHT + VERTICAL_PADDING) * fontScale;
 }
 
-// void printNewLineWPrompt() {
-//     printNewLine();
-//     displayPrompt("username", "kernel", "~");
-//     currentLinePosition = 0;
-// }
-
-void printTab() {
-    // currentX += 4 * CHAR_WIDTH;
-    // updateTextCursor(CURSOR_TAB); // no va lo suficiente hacia atras para borrar
-}
-
 uint8_t canDelete() {
     return currentLinePosition > 0;
 }
@@ -238,66 +167,4 @@ void updateTextCursor(CursorMovementType movementType) {
     }
     drawRectangle(currentX + HORIZONTAL_PADDING / 2, currentY, 1, CHAR_HEIGHT * fontScale, 0xFFFFFFFF); // place new one
     drawRectangle(currentX + xOffset, currentY + yOffset, 1, CHAR_HEIGHT * fontScale, 0x0000000); // remove previous one
-}
-
-//Ej: sebascaules@kernel:~$ "codigo usuario"
-void displayPrompt(char* username, char* hostname, char*currentDir) {
-    if(currentX == BORDER_PADDING){
-        printStrBW(username);
-        printCharBW('@');
-        printStrBW(hostname);
-        printCharBW(':');
-        printStrBW(currentDir);
-        printCharBW('$');
-        printCharBW(' ');
-    }
-    currentLinePosition = 0;
-}
-
-// Imprimir numeros
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base) {
-	char *p = buffer;
-	char *p1, *p2;
-	uint32_t digits = 0;
-
-	//Calculate characters for each digit
-	do {
-		uint32_t remainder = value % base;
-		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
-	}
-	while (value /= base);
-
-	// Terminate string in buffer.
-	*p = 0;
-
-	//Reverse string in buffer.
-	p1 = buffer;
-	p2 = p - 1;
-	while (p1 < p2) {
-		char tmp = *p1;
-		*p1 = *p2;
-		*p2 = tmp;
-		p1++;
-		p2--;
-	}
-
-	return digits;
-}
-
-void printDec(uint64_t value) {
-    printBase(value, 10);
-}
-
-void printHex(uint64_t value) {
-    printBase(value, 16);
-}
-
-void printBin(uint64_t value) { 
-    printBase(value, 2);
-}
-
-void printBase(uint64_t value, uint32_t base) {
-    uintToBase(value, buffer, base);
-    ncPrint(buffer);
 }

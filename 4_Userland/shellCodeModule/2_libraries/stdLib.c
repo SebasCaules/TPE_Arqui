@@ -1,5 +1,7 @@
-#include "stdlib.h"
-#include <stdarg.h>
+#include <stdLib.h>
+
+// MSJ_1 : Debido a un error con el stdarg.h y los flags -mno-sse y -mno-sse2 no se pueden implementar los doubles o floats
+
 
 static uint64_t typeToBuffer(char* buffer, uint64_t length, va_list args, Types type){
 	uint64_t ret = length;
@@ -20,11 +22,6 @@ static uint64_t typeToBuffer(char* buffer, uint64_t length, va_list args, Types 
     case OCT_TYPE:
         auxLength = convert_to_base_string(va_arg(args, int), 8, auxBuffer);
         break;
-	case DOUBLE_TYPE:
-		auxLength = decimalToString(va_arg(args, double), auxBuffer);
-		break;
-	case FLOAT_TYPE:
-		auxLength = decimalToString((float)va_arg(args, double), auxBuffer);
 		break;
 	case STR_TYPE:
 		char* str = va_arg(args, char*);
@@ -34,6 +31,12 @@ static uint64_t typeToBuffer(char* buffer, uint64_t length, va_list args, Types 
 		}
         numberFlag = 0;
 		break;
+    // MSJ_1
+	// case DOUBLE_TYPE:
+	// 	auxLength = decimalToString(va_arg(args, double), auxBuffer);
+	// 	break;
+	// case FLOAT_TYPE:
+	// 	auxLength = decimalToString((float)va_arg(args, double), auxBuffer);
 	default:
 		break;
 	}
@@ -53,8 +56,6 @@ static int printArgs(uint64_t fd, const char* fmt, va_list args) {
 
 	int formatSpecifierCount = 0;
     int argumentCount = 0;
-
-    // Ej: printf("El numero es: %d +- %f. %c: %s", 12, 0.145, '$', "signo de pesos");
     for (uint64_t i = 0; fmt[i]; i++) {
         char fmtSpecifier;
         if(fmt[i] == '%' && (fmtSpecifier = fmt[i + 1]) != '\0') {
@@ -65,11 +66,6 @@ static int printArgs(uint64_t fd, const char* fmt, va_list args) {
             case 'x':
 				length = typeToBuffer(buffer, length, args, HEX_TYPE);
                 break;
-            case 'f':
-				length = typeToBuffer(buffer, length, args, FLOAT_TYPE);
-                break;
-            case 'g':
-				length = typeToBuffer(buffer, length, args, DOUBLE_TYPE);
                 break;
             case 'c': 
                 buffer[length++] = (char)va_arg(args, int);
@@ -77,6 +73,12 @@ static int printArgs(uint64_t fd, const char* fmt, va_list args) {
             case 's':
 				length = typeToBuffer(buffer, length, args, STR_TYPE);
                 break;
+            //MSJ_1
+            // case 'f':
+			// 	length = typeToBuffer(buffer, length, args, FLOAT_TYPE);
+            //     break;
+            // case 'g':
+			// 	length = typeToBuffer(buffer, length, args, DOUBLE_TYPE);
             default:
                 break;
             }

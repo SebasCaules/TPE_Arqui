@@ -129,9 +129,7 @@ void play() {
             endWithMessage("Player 1 Wins!");
             break;
         }
-
         sleep(BASE_TIME / difficulty);
-
     }
 }
 

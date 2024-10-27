@@ -25,8 +25,8 @@ void help() {
     puts("  convert         - Converts a number of any base to any other base (EX: convert 10 2 10)");
     puts("  snake           - Starts the Snake game.");
     puts("  getregs         - Display the contents of the CPU's registers.");
-    puts("  opcode          - Display the "); //Rellena la desc
-    puts("  divzero         - Display ");
+    puts("  divzero         - Throws the exception division by zero");
+    puts("  opcode          - Throws the exception invalid Opcode");
 }
 
 void showTime() {

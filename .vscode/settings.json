@@ -6,6 +6,8 @@
         "syscallsint.h": "c",
         "stdint.h": "c",
         "syscalls.h": "c",
-        "__availability": "c"
+        "__availability": "c",
+        "__stdarg_va_arg.h": "c",
+        "__stdarg_va_list.h": "c"
     }
 }

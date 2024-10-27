@@ -17,13 +17,13 @@ divZero:
     ret
 
 opCode:
-    ; ud2
-    ; ret
-    push rbp
-    mov rbp, rsp
-
-    jmp 0
-
-    mov rsp, rbp
-    pop rbp
+    ud2
     ret
+    ; push rbp
+    ; mov rbp, rsp
+
+    ; jmp 0
+
+    ; mov rsp, rbp
+    ; pop rbp
+    ; ret
