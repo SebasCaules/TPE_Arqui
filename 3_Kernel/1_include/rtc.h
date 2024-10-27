@@ -15,13 +15,46 @@
 #define RTC_MONTH           0x08
 #define RTC_YEAR            0x09
 
+/**
+ * @brief Retrieves the current seconds from the Real-Time Clock (RTC).
+ * @return The current seconds value (0-59).
+ */
 uint8_t getRTCSeconds();
-uint8_t getRTCMinutes();
-uint8_t getRTCHours();
-uint8_t getRTCDayOfWeek();
-uint8_t getRTCDayOfMonth();
-uint8_t getRTCMonth();
-uint8_t getRTCYear();
 
+/**
+ * @brief Retrieves the current minutes from the Real-Time Clock (RTC).
+ * @return The current minutes value (0-59).
+ */
+uint8_t getRTCMinutes();
+
+/**
+ * @brief Retrieves the current hours from the Real-Time Clock (RTC).
+ * @return The current hours value (0-23).
+ */
+uint8_t getRTCHours();
+
+/**
+ * @brief Retrieves the current day of the week from the Real-Time Clock (RTC).
+ * @return The current day of the week value (1-7, where 1 = Sunday).
+ */
+uint8_t getRTCDayOfWeek();
+
+/**
+ * @brief Retrieves the current day of the month from the Real-Time Clock (RTC).
+ * @return The current day of the month value (1-31).
+ */
+uint8_t getRTCDayOfMonth();
+
+/**
+ * @brief Retrieves the current month from the Real-Time Clock (RTC).
+ * @return The current month value (1-12).
+ */
+uint8_t getRTCMonth();
+
+/**
+ * @brief Retrieves the current year from the Real-Time Clock (RTC).
+ * @return The current year value (e.g., 2023).
+ */
+uint8_t getRTCYear();
 
 #endif //TPE_ARQUI_RTC_H

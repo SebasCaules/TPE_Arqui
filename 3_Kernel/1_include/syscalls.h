@@ -39,26 +39,87 @@ typedef struct {
     uint64_t rip;
 } Snapshot;
 
+/**
+ * @brief Causes the program to sleep for a specified number of milliseconds.
+ * @param milliseconds The duration to sleep, in milliseconds.
+ * @return Returns 0 on success, or an error code on failure.
+ */
 uint64_t sys_sleep(uint64_t milliseconds);
 
+/**
+ * @brief Retrieves the current time and stores it in the provided time structure.
+ * @param time Pointer to a time_struct where the current time will be stored.
+ * @return Returns 0 on success, or an error code on failure.
+ */
 int64_t sys_time(time_struct* time);
 
+/**
+ * @brief Reads data from a specified file descriptor into a buffer.
+ * @param fd The file descriptor to read from.
+ * @param buffer Pointer to the buffer where the read data will be stored.
+ * @param length The number of bytes to read.
+ * @return Returns the number of bytes read, or an error code on failure.
+ */
 int64_t sys_read(uint64_t fd, uint16_t * buffer, uint64_t length);
 
+/**
+ * @brief Writes data to a specified file descriptor from a buffer.
+ * @param fd The file descriptor to write to.
+ * @param buffer Pointer to the buffer containing the data to write.
+ * @param length The number of bytes to write.
+ * @return Returns the number of bytes written, or an error code on failure.
+ */
 int64_t sys_write(uint64_t fd, uint16_t * buffer, uint64_t length);
 
+/**
+ * @brief Clears the terminal or display screen.
+ * @return Returns 0 on success, or an error code on failure.
+ */
 int64_t sys_clear();
 
+/**
+ * @brief Sets the font scale for text rendering.
+ * @param scale The desired font scale.
+ * @return Returns 0 on success, or an error code on failure.
+ */
 int64_t sys_set_font_scale(uint64_t scale);
 
+/**
+ * @brief Draws a rectangle on the display at the specified position and size.
+ * @param x The x-coordinate of the rectangle's top-left corner.
+ * @param y The y-coordinate of the rectangle's top-left corner.
+ * @param width The width of the rectangle.
+ * @param height The height of the rectangle.
+ * @param color The color of the rectangle.
+ * @return Returns 0 on success, or an error code on failure.
+ */
 int64_t sys_draw_rectangle(uint64_t x, uint64_t y, uint64_t width, uint64_t height, uint32_t color);
 
+/**
+ * @brief Returns the current system tick count.
+ * @return The current tick count.
+ */
 uint64_t sys_tick();
 
+/**
+ * @brief Resets the cursor to its initial position.
+ * @return Returns 0 on success, or an error code on failure.
+ */
 uint64_t sys_reset_cursor();
 
+/**
+ * @brief Retrieves the current state of the CPU registers.
+ * @param r Pointer to a buffer where the register values will be stored.
+ * @return Returns 0 on success, or an error code on failure.
+ */
 uint64_t sys_get_regs(uint64_t * r);
 
+/**
+ * @brief Produces a beep sound at a specified frequency for a specified duration.
+ * @param freq The frequency of the beep in Hertz.
+ * @param milliseconds The duration of the beep in milliseconds.
+ * @return Returns 0 on success, or an error code on failure.
+ */
 uint64_t sys_beep(uint64_t freq, uint64_t milliseconds);
 
 #endif // !SYSCALLS_H

@@ -222,7 +222,6 @@ void beep(int freq, int milliseconds) {
     sys_beep(freq, milliseconds);
 }
 
-// Function to convert a single character base identifier ('2', '8', '10', '16') to an integer
 static int get_base_from_char(char base) {
     switch (base) {
         case 'b': return 2;
@@ -233,33 +232,27 @@ static int get_base_from_char(char base) {
     }
 }
 
-// Function to convert a fmting from any base (2, 8, 10, 16) to decimal (base 10)
 static int to_decimal(const char *fmt, int base) {
     int result = 0;
     int i = 0;
 
-    // Convert each character in the fmting to the corresponding digit
     while (fmt[i] != '\0') {
         int digit;
         
-        // For digits '0' to '9'
         if (fmt[i] >= '0' && fmt[i] <= '9') {
             digit = fmt[i] - '0';
         }
-        // For uppercase 'A' to 'F' (hexadecimal)
         else if (fmt[i] >= 'A' && fmt[i] <= 'F') {
             digit = fmt[i] - 'A' + 10;
         }
-        // For lowercase 'a' to 'f' (hexadecimal)
         else if (fmt[i] >= 'a' && fmt[i] <= 'f') {
             digit = fmt[i] - 'a' + 10;
         } else {
-            return -1;  // Invalid character for the base
+            return -1;
         }
 
-        // Check if digit is valid for the base
         if (digit >= base) {
-            return -1;  // Invalid digit for the base
+            return -1;
         }
 
         result = result * base + digit;
@@ -268,19 +261,16 @@ static int to_decimal(const char *fmt, int base) {
     return result;
 }
 
-// Function to convert a decimal number to any base (2, 8, 10, 16)
 static void from_decimal(int decimal, int base, char *buffer) {
     const char *digits = "0123456789ABCDEF";
     int pos = 0;
 
-    // Handle zero case
     if (decimal == 0) {
         buffer[pos++] = '0';
         buffer[pos] = '\0';
         return;
     }
 
-    // Convert decimal to the desired base
     while (decimal > 0) {
         buffer[pos++] = digits[decimal % base];
         decimal /= base;
@@ -288,7 +278,6 @@ static void from_decimal(int decimal, int base, char *buffer) {
     
     buffer[pos] = '\0';
 
-    // Reverse the buffer to get the correct order
     for (int i = 0; i < pos / 2; i++) {
         char temp = buffer[i];
         buffer[i] = buffer[pos - i - 1];
@@ -296,26 +285,21 @@ static void from_decimal(int decimal, int base, char *buffer) {
     }
 }
 
-// Main function to convert a number in `initBase` to `finalBase`
 void convert(char initBase, char finalBase, char *num) {
-    // Get integer values of bases from character form
     int initBaseValue = get_base_from_char(initBase);
     int finalBaseValue = get_base_from_char(finalBase);
 
-    // Check for valid bases
     if (initBaseValue == -1 || finalBaseValue == -1) {
         printf("The initial and final base must be one of: 'b', 'o', 'd', 'h'\n");
         return;
     }
 
-    // Convert input number from initial base to decimal
     int decimal = to_decimal(num, initBaseValue);
     if (decimal == -1) {
         printf("Invalid number %s for base %c\n", num, initBase);
         return;
     }
 
-    // Convert from decimal to the final base
     char convertedNum[BUFFER_SIZE];
     from_decimal(decimal, finalBaseValue, convertedNum);
 

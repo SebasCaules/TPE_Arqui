@@ -1,14 +1,13 @@
 #include <snake.h>
 #include <stdLib.h>
 #include <random.h>
-#include <syscallsInt.h>
 
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
 
 #define CANVAS_SIDE 768
 #define SQUARE_SIDE 32
-#define GRID_SIZE (CANVAS_SIDE / SQUARE_SIDE) // queda un grid de 32x32
+#define GRID_SIZE (CANVAS_SIDE / SQUARE_SIDE)
 
 #define INITIAL_SNAKE_LENGTH 3
 
@@ -20,18 +19,16 @@
 
 #define BASE_TIME 200
 
-// separacion inicial entre las snakes cuando se juega con 2 jugadores
 #define INITIAL_SPACING 4
 
 int leftBorder;
-int rightBorder;
-int topBorder;
-int bottomBorder;
 
 int numOfPlayers;
 int gameHasStarted;
 
 int difficulty;
+
+char pressedKey;
 
 typedef struct {
     int x, y;
@@ -50,13 +47,22 @@ Snake snake2;
 Position food;
 
 int snake() {
+    leftBorder = (WINDOW_WIDTH - CANVAS_SIDE - 1);
 
-    gameHasStarted = 0;
-    numOfPlayers = 1;
-    setupCanvas();
-    presentStartView();
-    
-    startGame();
+    while (1) {
+        gameHasStarted = 0;
+        numOfPlayers = 1;
+        presentStartView();
+        startGame();
+
+        if (!askReplay()) {
+            break;
+        }
+
+    }
+
+    clearView();
+    return 0;
 
 }
 
@@ -64,7 +70,6 @@ void presentStartView() {
     clearView();
     puts("Welcome to Snake game!");
     puts("Player 1 uses W/A/S/D. Player 2 uses I/J/K/L.");
-    puts("Press ESC to finish the game.");
     numOfPlayers = askNumOfPlayers();
     difficulty = askDifficulty();
     clearView();
@@ -72,19 +77,16 @@ void presentStartView() {
 }
 
 void startGame() {
-
     awaitStart();
     play();
-
 }
 
 void awaitStart() {
     puts("Press SPACE to start playing...");
-    char key;
 
     while (1) {
-        key = toLowercase(getchar());
-        if (key == ' ') {
+        pressedKey = toLowercase(getchar());
+        if (pressedKey == ' ') {
             if (gameHasStarted) {
                 continue;
             }
@@ -100,21 +102,15 @@ void awaitStart() {
 }
 
 void play() {
-    char * key;
     int bufferSize;
 
     while(1) {
 
         bufferSize = 0;
-        bufferSize = readInput(key);
-
-        if (*key == 'q') {
-            clearView();
-            break;
-        }
+        bufferSize = readInput(&pressedKey);
 
         if (bufferSize > 0) {
-            handleKeyPresses(*key);
+            handleKeyPresses(pressedKey);
         }
 
         checkSnake(&snake1);
@@ -142,6 +138,8 @@ void play() {
 void checkSnake(Snake * snake) {
     updateSnake(snake);
     if (checkFood(snake)) {
+
+        // no anda el beep
         beep(500, 200);
         growSnake(snake);
         updateSnake(snake);
@@ -162,10 +160,23 @@ void endWithMessage(char * message) {
     clearView();
 }
 
+int askReplay() {
+    puts("Press SPACE to play again...");
+    puts("Press q to quit...");
+
+    while (1) {
+        pressedKey = toLowercase(getchar());
+        if (pressedKey == ' ') {
+            return 1;
+        } else if (pressedKey == 'q') {
+            return 0;
+        }
+    }
+}
+
 void placeFood() {
     int randomPosition, xPos, yPos, isOnSnake;
 
-    // Para que no caiga encima de una snake
     do {
         isOnSnake = 0;
         randomPosition = getRandomInt(0, GRID_SIZE * GRID_SIZE - 1);
@@ -198,11 +209,11 @@ void placeFood() {
 }
 
 void initializeSnakes() {
-    initializeSnake(&snake1, GREEN, -2);
+    initializeSnake(&snake1, GREEN, -(INITIAL_SPACING / 2));
     if (numOfPlayers == 1) {
         return;
     }
-    initializeSnake(&snake2, BLUE, 2);
+    initializeSnake(&snake2, BLUE, INITIAL_SPACING / 2);
 }
 
 void initializeSnake(Snake * snake, int color, int offset) {
@@ -385,13 +396,6 @@ void updatePlayerScores() {
     if (numOfPlayers == 2) {
         printf("Player 2: %d\n", snake2.score);
     }
-}
-
-void setupCanvas() {
-    leftBorder = (WINDOW_WIDTH - CANVAS_SIDE - 1);
-    rightBorder = (WINDOW_WIDTH - 1);
-    topBorder = 0;
-    bottomBorder = CANVAS_SIDE - 1;
 }
 
 void drawCanvas() {
