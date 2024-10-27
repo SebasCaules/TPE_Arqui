@@ -31,4 +31,6 @@ uint64_t sys_sleep(uint64_t milliseconds);
 
 uint64_t sys_reset_cursor();
 
+uint64_t sys_get_regs(uint64_t * r);
+
 #endif

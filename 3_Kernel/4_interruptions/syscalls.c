@@ -5,6 +5,8 @@
 #include <rtc.h>
 #include <time.h>
 
+extern uint64_t regs[17];
+
 typedef enum {
     SLEEP = 0,
     TIME,
@@ -14,7 +16,8 @@ typedef enum {
     CLEAR,
     DRAW_RECTANGLE,
     TICK,
-    RESET_CURSOR
+    RESET_CURSOR,
+    GET_REGS
 } syscallsNum;
 
 
@@ -34,6 +37,7 @@ uint64_t sysCallHandler(Registers * regs) {
     case DRAW_RECTANGLE: return sys_draw_rectangle(regs->rdi, regs->rsi, regs->rdx, regs->rcx, regs->r8);
     case TICK: return sys_tick();
     case RESET_CURSOR: return sys_reset_cursor();
+    case GET_REGS: return sys_get_regs(regs->rdi);
     default: return 0;
     }
 }
@@ -100,5 +104,9 @@ uint64_t sys_tick() {
 uint64_t sys_reset_cursor() {
     resetCursor();
     return 0;
+}
+
+uint64_t sys_get_regs(uint64_t * r) {
+    return getRegisters(r);
 }
 

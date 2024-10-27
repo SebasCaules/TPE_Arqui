@@ -7,6 +7,7 @@ GLOBAL sys_draw_rectangle
 GLOBAL sys_tick
 GLOBAL sys_sleep
 GLOBAL sys_reset_cursor
+GLOBAL sys_get_regs
 
 section .text
 
@@ -116,3 +117,6 @@ sys_tick:
 
 sys_reset_cursor:
     sys_handler 8
+
+sys_get_regs:
+    sys_handler 9

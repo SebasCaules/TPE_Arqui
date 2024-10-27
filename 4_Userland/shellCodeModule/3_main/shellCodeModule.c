@@ -56,7 +56,12 @@ void clearTerminal() {
 }
 
 void getRegs() {
-    printf("Todavia no se implemento \n");
+    uint64_t r[17];
+    sys_get_regs(r);
+    for (int i = 0; i < 17; i++) {
+        printf("r[%d]: %d;\n", i, r[i]);
+    }
+    
 }
 
 void askForUser() {

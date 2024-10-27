@@ -89,6 +89,40 @@ section .text
 	iretq
 %endmacro
 
+; %macro snapshot 0
+;     mov [regs + (8 * 0)], rax
+;     mov [regs + (8 * 1)], rbx
+;     mov [regs + (8 * 2)], rcx
+;     mov [regs + (8 * 3)], rdx
+;     mov [regs + (8 * 4)], rsi
+;     mov [regs + (8 * 5)], rdi
+;     mov [regs + (8 * 6)], rbp
+;     mov [regs + (8 * 7)], r8
+;     mov [regs + (8 * 8)], r9
+;     mov [regs + (8 * 9)], r10
+;     mov [regs + (8 * 10)], r11
+;     mov [regs + (8 * 11)], r12
+;     mov [regs + (8 * 12)], r13
+;     mov [regs + (8 * 13)], r14
+;     mov [regs + (8 * 14)], r15
+
+;     mov rax, [rsp + (8 * 3)] ;rsp
+;     mov [regs + (8 * 15)], rax
+
+;     mov rax, [rsp + (8 * 0)] ;rip
+;     mov [regs + (8 * 16)], rax
+
+; 	; estos no se 
+;     mov rax, [rsp + (8 * 2)] ;rflags
+;     mov [regs + (8 * 17)], rax
+
+;     mov rax, [rsp + (8 * 1)] ;cs
+;     mov [regs + (8 * 18)], rax
+
+;     mov rax, [rsp + (8 * 4)] ;ss
+;     mov [regs + (8 * 19)], rax
+; %endmacro
+
 
 
 %macro exceptionHandler 1
@@ -180,3 +214,4 @@ haltcpu:
 
 section .bss
 	aux resq 1
+	; regs resq 20

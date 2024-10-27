@@ -5,6 +5,8 @@
 #define NKEYS 58
 #define BUFFER_SIZE 256
 #define MAX_PRESS_CODE 0x70
+#define REGS_AMOUNT 17
+
 
 // Define de teclas especiales:
 #define ESC 0x01
@@ -26,6 +28,15 @@
 
 #define CTRL_PRESS 0x1D
 #define CTRL_RELEASE 0x9D
+
+
+extern void _updateRegisters();
+extern uint64_t * _getRegisters();
+static void updateRegisters();
+
+static uint8_t reg_shot_flag = 0;
+
+static volatile uint64_t registers[REGS_AMOUNT];
 
 
 static unsigned char keyValues[NKEYS][2] = {
@@ -101,6 +112,7 @@ static int nextIndex;
 
 int shiftFlag = 0;
 int capsLockFlag = 0;
+int altFlag = 0;
 
 void pressedKey(){
     int c = getPressedKey();
@@ -117,8 +129,18 @@ void pressedKey(){
     case CAPS_LOCK_PRESS:
         capsLockFlag = !capsLockFlag;
         break;
+	case ALT_PRESS:
+		altFlag = 1;
+	case ALT_RELEASE:
+		altFlag = 0;
     default:
         break;
+    }
+
+	if(altFlag && (c == 'r' || c == 'R')) {
+		printStrBW("Se guardo el buffer");
+        reg_shot_flag = 1;
+        updateRegisters();
     }
 	
     if (c <= MAX_PRESS_CODE) {
@@ -149,4 +171,22 @@ unsigned char bufferNext() {
         return bufferNext(); 
     }
     return toRet;
+}
+
+void updateRegisters() {
+    _updateRegisters();
+    uint64_t * r = _getRegisters();
+    for(int i = 0; i < REGS_AMOUNT; i++) {
+        registers[i] = r[i];
+    }
+}
+
+uint64_t getRegisters(uint64_t * r) {
+    if(!reg_shot_flag) {
+        return 0;
+    }
+    for(int i = 0; i < REGS_AMOUNT; i++) {
+        r[i] = registers[i];
+    }
+    return 1;
 }
