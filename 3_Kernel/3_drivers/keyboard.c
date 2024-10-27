@@ -112,7 +112,15 @@ static int nextIndex;
 
 int shiftFlag = 0;
 int capsLockFlag = 0;
-int altFlag = 0;
+int ctrlFlag = 0;
+
+void printFlag(int flag){
+	if(flag){
+		printStrBW("1");
+	} else {
+		printStrBW("0");
+	}
+}
 
 void pressedKey(){
     int c = getPressedKey();
@@ -129,20 +137,16 @@ void pressedKey(){
     case CAPS_LOCK_PRESS:
         capsLockFlag = !capsLockFlag;
         break;
-	case ALT_PRESS:
-		altFlag = 1;
-	case ALT_RELEASE:
-		altFlag = 0;
+	case CTRL_PRESS:
+		ctrlFlag = 1;
+		break;
+	case CTRL_RELEASE:
+		ctrlFlag = 0;
+		break;
     default:
         break;
     }
 
-	if(altFlag && (c == 'r' || c == 'R')) {
-		printStrBW("Se guardo el buffer");
-        reg_shot_flag = 1;
-        updateRegisters();
-    }
-	
     if (c <= MAX_PRESS_CODE) {
         if(isSpecialKey(c)) {
             buffer[current++] = c;
@@ -153,7 +157,6 @@ void pressedKey(){
                 index = capsLockFlag ? !shiftFlag : shiftFlag;
             }
             buffer[current++] = keyValues[c][index];
-            // printCharBW(buffer[current-1]); //Habra que sacarlo
         }
         current %= BUFFER_SIZE; //Limpia ciclicamente el current
     }
@@ -166,10 +169,15 @@ unsigned char bufferNext() {
     unsigned char toRet = buffer[nextToRead];
     buffer[nextToRead++] = 0;
     nextToRead %= BUFFER_SIZE;
-	// ARREGLAR 6 Y ;
-    if (isSpecialKey(toRet)) {
-        return bufferNext(); 
+
+    if (toRet != '6' && toRet != ';' && toRet != ':' && isSpecialKey(toRet)) {
+        return bufferNext();
     }
+	
+	if(ctrlFlag && (toRet == 's' || toRet == 'S')){
+		reg_shot_flag = 1;
+		updateRegisters();
+	}
     return toRet;
 }
 

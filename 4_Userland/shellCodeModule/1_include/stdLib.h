@@ -1,16 +1,34 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <syscallsInt.h>
+#include <strLib.h>
 
 #ifndef TPE_ARQUI_STDLIB_H
 #define TPE_ARQUI_STDLIB_H
 
 #define MAX_COMMAND_LENGTH 128
 #define MAX_USERNAME_LENGTH 32
-#define MAX_WORDS 4
-#define MAX_WORD_LENGTH 32
+#define EOF (-1)
 
-uint64_t strlen(const char *str);
+typedef enum {
+	STDIN = 0,
+    STDOUT,
+    STDERR,
+    STDMARK,
+} fileDesc;
+
+typedef enum {
+	INT_TYPE = 0,
+    HEX_TYPE,
+    BIN_TYPE,
+    OCT_TYPE,
+	FLOAT_TYPE,
+	DOUBLE_TYPE,
+	CHAR_TYPE,
+	STR_TYPE,
+} Types;
+
+int fdprintf(uint64_t fd, const char* fmt, ...);
 
 int	printf(const char * str, ...);
 
@@ -28,17 +46,7 @@ int puts(const char *str);
 
 int gets(char *buffer, int n);
 
-int strcmp(const char *str1, const char *str2);
-
-void interactive_keyboard();
-
 int setFontScale(int scale);
-
-int stringToInt(const char *str);
-
-int splitString(const char* input, char words[MAX_WORDS][MAX_WORD_LENGTH]);
-
-char toLowercase(char c);
 
 void clearView();
 
@@ -49,5 +57,7 @@ void sleep(int milliseconds);
 void resetCursor();
 
 void beep(int freq, int milliseconds);
+
+void convert(char initBase, char finalBase, char* num);
 
 #endif //TPE_ARQUI_STDLIB_H
