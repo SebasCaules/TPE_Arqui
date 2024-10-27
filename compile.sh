@@ -25,5 +25,8 @@ else
     echo "One or both make commands failed. Not running ./run.sh"
 fi
 
+docker exec -it $CONTAINER_NAME make clean -C /root/2_Toolchain
+docker exec -it $CONTAINER_NAME make clean -C /root
+
 # Stop the Docker container
 docker stop $CONTAINER_NAME
