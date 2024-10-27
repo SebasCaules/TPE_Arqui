@@ -8,4 +8,8 @@ void * memcpy(void * destination, const void * source, uint64_t length);
 
 char *cpuVendor(char *result);
 
+int strlength(const char *str);
+
+char * itoaHex(uint64_t num, char * str);
+
 #endif

@@ -2,6 +2,20 @@
 
 static void toUtcMinus3(time_struct * time);
 
+static char username[MAX_USERNAME_LENGTH] = { 0 };
+
+static module modules[] = {
+    {"help", help},
+    {"time", showTime},
+    {"setfont", setFontScale},
+    {"clear", clearTerminal},
+    {"convert", convert},
+    {"snake", snake},
+    {"getregs", getRegs},
+    {"opcode", opCode},
+    {"divzero", divZero}
+};
+
 void help() {
     puts("Available Commands: ");
     puts("  help            - Shows all available commands.");
@@ -19,7 +33,8 @@ void showTime() {
     time_struct time;
     sys_time(&time);
     toUtcMinus3(&time);
-    printf("%d/%d/20%d [dd/mm/yyyy] %d:%d:%d [hh:mm:ss]\n", time.day, time.month, 
+    printf("[dd/mm/yyyy] - [hh:mm:ss]\n");
+    printf(" %d/%d/20%d  -  %d:%d:%d  \n", time.day, time.month, 
     time.year, time.hour, time.minutes, time.seconds); //Porque year es solo 2 digs?
     return;
 }
@@ -56,20 +71,6 @@ void getRegs() {
     printf("rsp: %x\n", r[15]);
     printf("rip: %x\n", r[16]);
 }
-
-static char username[MAX_USERNAME_LENGTH];
-
-static module modules[] = {
-    {"help", help},
-    {"time", showTime},
-    {"setfont", setFontScale},
-    {"clear", clearTerminal},
-    {"convert", convert},
-    {"snake", snake},
-    {"getregs", getRegs},
-    {"opcode", opCode},
-    {"divzero", divZero}
-};
 
 void askForUser() {
     putsNoNewLine("Enter a username: ");
@@ -110,6 +111,16 @@ void getCmdInput() {
         return;
     }
     printf("Command not found: %s\n", words[0]); // Hay que agarrar solo la primera palabra
+}
+
+void initShell() {
+    askForUser();
+    clearTerminal();
+    printf(WELCOME_MESSAGE, username);
+    showTime();
+    putchar('\n');
+    help();
+    putchar('\n');
 }
 
 static void toUtcMinus3(time_struct * time) {

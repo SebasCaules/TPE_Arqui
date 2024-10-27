@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <snake.h>
 #include <exceptions.h>
+#include <stddef.h>
 
-#define WELCOME_MESSAGE "Bienvenido a la terminal!\n"
+#define WELCOME_MESSAGE "Welcome to the terminal %s!\n"
 #define PROMPT "%s@userland ~ $ "
-#define NUM_MODULES 8
+#define NUM_MODULES 9
 
 typedef struct module {
     char *name;
@@ -25,3 +26,5 @@ void getRegs();
 void askForUser();
 
 void getCmdInput();
+
+void initShell();

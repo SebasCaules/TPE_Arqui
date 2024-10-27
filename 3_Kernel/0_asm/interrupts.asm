@@ -15,10 +15,13 @@ GLOBAL _irq05Handler
 GLOBAL _irq80Handler
 
 GLOBAL _exception0Handler
+GLOBAL _exception6Handler
+GLOBAL getSnap
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN sysCallHandler
+EXTERN getStackBase
 
 section .text
 
@@ -89,51 +92,62 @@ section .text
 	iretq
 %endmacro
 
-; %macro snapshot 0
-;     mov [regs + (8 * 0)], rax
-;     mov [regs + (8 * 1)], rbx
-;     mov [regs + (8 * 2)], rcx
-;     mov [regs + (8 * 3)], rdx
-;     mov [regs + (8 * 4)], rsi
-;     mov [regs + (8 * 5)], rdi
-;     mov [regs + (8 * 6)], rbp
-;     mov [regs + (8 * 7)], r8
-;     mov [regs + (8 * 8)], r9
-;     mov [regs + (8 * 9)], r10
-;     mov [regs + (8 * 10)], r11
-;     mov [regs + (8 * 11)], r12
-;     mov [regs + (8 * 12)], r13
-;     mov [regs + (8 * 13)], r14
-;     mov [regs + (8 * 14)], r15
+%macro snapshot 0
+    mov [regs + (8 * 0)], rax
+    mov [regs + (8 * 1)], rbx
+    mov [regs + (8 * 2)], rcx
+    mov [regs + (8 * 3)], rdx
+    mov [regs + (8 * 4)], rsi
+    mov [regs + (8 * 5)], rdi
+    mov [regs + (8 * 6)], rbp
+    mov [regs + (8 * 7)], r8
+    mov [regs + (8 * 8)], r9
+    mov [regs + (8 * 9)], r10
+    mov [regs + (8 * 10)], r11
+    mov [regs + (8 * 11)], r12
+    mov [regs + (8 * 12)], r13
+    mov [regs + (8 * 13)], r14
+    mov [regs + (8 * 14)], r15
 
-;     mov rax, [rsp + (8 * 3)] ;rsp
-;     mov [regs + (8 * 15)], rax
+    mov rax, [rsp + (8 * 3)] ;rsp
+    mov [regs + (8 * 15)], rax
 
-;     mov rax, [rsp + (8 * 0)] ;rip
-;     mov [regs + (8 * 16)], rax
+    mov rax, [rsp + (8 * 0)] ;rip
+    mov [regs + (8 * 16)], rax
 
-; 	; estos no se 
-;     mov rax, [rsp + (8 * 2)] ;rflags
-;     mov [regs + (8 * 17)], rax
+	; estos no se 
+    mov rax, [rsp + (8 * 2)] ;rflags
+    mov [regs + (8 * 17)], rax
 
-;     mov rax, [rsp + (8 * 1)] ;cs
-;     mov [regs + (8 * 18)], rax
+    mov rax, [rsp + (8 * 1)] ;cs
+    mov [regs + (8 * 18)], rax
 
-;     mov rax, [rsp + (8 * 4)] ;ss
-;     mov [regs + (8 * 19)], rax
-; %endmacro
+    mov rax, [rsp + (8 * 4)] ;ss
+    mov [regs + (8 * 19)], rax
+%endmacro
 
 
 
 %macro exceptionHandler 1
-	pushState
+
+    snapshot
 
 	mov rdi, %1 ; pasaje de parametro
 	call exceptionDispatcher
 
-	popState
+	call getStackBase
+
+	mov [rsp+24], rax
+
+	mov rax, userland
+	mov [rsp], rax
+
 	iretq
 %endmacro
+
+getSnap:
+	mov rax, regs
+	ret
 
 
 _hlt:
@@ -205,13 +219,19 @@ _irq80Handler:
 _exception0Handler:
 	exceptionHandler 0
 
+;Opcode Exception
+_exception6Handler:
+	exceptionHandler 6
+
 haltcpu:
 	cli
 	hlt
 	ret
 
 
+section .rodata
+    userland equ 0x400000
 
 section .bss
 	aux resq 1
-	; regs resq 20
+	regs resq 20
