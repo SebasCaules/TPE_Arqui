@@ -48,4 +48,6 @@ void sleep(int milliseconds);
 
 void resetCursor();
 
+void beep(int freq, int milliseconds);
+
 #endif //TPE_ARQUI_STDLIB_H

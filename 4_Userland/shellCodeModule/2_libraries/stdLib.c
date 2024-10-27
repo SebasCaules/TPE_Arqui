@@ -384,3 +384,7 @@ void resetCursor() {
     sys_reset_cursor();
 }
 
+void beep(int freq, int milliseconds) {
+    sys_beep(freq, milliseconds);
+}
+

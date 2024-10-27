@@ -1,4 +1,6 @@
 GLOBAL cpuVendor, rtc, getPressedKey, _updateRegisters, _getRegisters
+GLOBAL outb
+GLOBAL inb
 
 section .text
 	
@@ -71,6 +73,30 @@ _updateRegisters:
 _getRegisters:
     mov rax, regs
     ret
+
+
+inb:
+	push rbp
+    mov rbp, rsp
+
+	mov rdx, rdi
+	in al, dx
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+outb:
+	push rbp
+    mov rbp, rsp
+
+	mov rax, rsi
+	mov rdx, rdi
+	out dx, al
+
+	mov rsp, rbp
+	pop rbp
+	ret
 
 section .bss
     regs dq 17

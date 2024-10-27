@@ -8,6 +8,7 @@ GLOBAL sys_tick
 GLOBAL sys_sleep
 GLOBAL sys_reset_cursor
 GLOBAL sys_get_regs
+GLOBAL sys_beep
 
 section .text
 
@@ -120,3 +121,6 @@ sys_reset_cursor:
 
 sys_get_regs:
     sys_handler 9
+    
+sys_beep:
+    sys_handler 10
