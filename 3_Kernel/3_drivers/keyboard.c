@@ -114,14 +114,6 @@ int shiftFlag = 0;
 int capsLockFlag = 0;
 int ctrlFlag = 0;
 
-void printFlag(int flag){
-	if(flag){
-		printStrBW("1");
-	} else {
-		printStrBW("0");
-	}
-}
-
 void pressedKey(){
     int c = getPressedKey();
 
@@ -176,7 +168,9 @@ unsigned char bufferNext() {
 	
 	if(ctrlFlag && (toRet == 's' || toRet == 'S')){
 		reg_shot_flag = 1;
+		printStrBW("The snapshot was taken");
 		updateRegisters();
+		toRet = '\n';
 	}
     return toRet;
 }

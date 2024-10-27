@@ -52,7 +52,7 @@ void clearTerminal() {
 void getRegs() {
     uint64_t r[17];
     sys_get_regs(r);
-    puts("Register snapshot:\n");
+    puts("Register snapshot:");
     printf("rax: %x\n", r[0]);
     printf("rbx: %x\n", r[1]);
     printf("rcx: %x\n", r[2]);
