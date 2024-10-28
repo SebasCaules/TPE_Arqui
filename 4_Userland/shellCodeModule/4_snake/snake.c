@@ -166,7 +166,7 @@ int askReplay() {
         pressedKey = toLowercase(getchar());
         if (pressedKey == ' ') {
             return 1;
-        } else if (pressedKey == 'q') {
+        } else if (pressedKey == 'q' || pressedKey == 'Q') {
             return 0;
         }
     }
@@ -292,6 +292,7 @@ int checkFood(Snake * snake) {
 void handleKeyPresses(char c) {
     switch (c) {
         case 'w':
+        case 'W':
             if (snake1.direction.y == 1) {
                 break;
             }
@@ -299,6 +300,7 @@ void handleKeyPresses(char c) {
             snake1.direction.y = -1;
             break;
         case 'a':
+        case 'A':
             if (snake1.direction.x == 1) {
                 break;
             }
@@ -306,6 +308,7 @@ void handleKeyPresses(char c) {
             snake1.direction.y = 0;
             break;
         case 's':
+        case 'S':
             if (snake1.direction.y == -1) {
                 break;
             }
@@ -313,6 +316,7 @@ void handleKeyPresses(char c) {
             snake1.direction.y = 1;
             break;
         case 'd':
+        case 'D':
             if (snake1.direction.x == -1) {
                 break;
             }
@@ -327,6 +331,7 @@ void handleKeyPresses(char c) {
 
     switch(c) {
         case 'i':
+        case 'I':
             if (snake2.direction.y == 1) {
                 break;
             }
@@ -334,6 +339,7 @@ void handleKeyPresses(char c) {
             snake2.direction.y = -1;
             break;
         case 'j':
+        case 'J':
             if (snake2.direction.x == 1) {
                 break;
             }
@@ -341,6 +347,7 @@ void handleKeyPresses(char c) {
             snake2.direction.y = 0;
             break;
         case 'k':
+        case 'K':
             if (snake2.direction.y == -1) {
                 break;
             }
@@ -348,6 +355,7 @@ void handleKeyPresses(char c) {
             snake2.direction.y = 1;
             break;
         case 'l':
+        case 'L':
             if (snake2.direction.x == -1) {
                 break;
             }
