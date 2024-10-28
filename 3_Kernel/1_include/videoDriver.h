@@ -12,6 +12,15 @@
 #define MIN_FONT_SCALE 1
 #define MAX_FONT_SCALE 2
 
+
+typedef enum CursorMovementType {
+    CURSOR_TYPING,
+    CURSOR_DELETING,
+    CURSOR_NEWLINE,
+    CURSOR_PREVIOUS,
+    CURSOR_MOVING
+} CursorMovementType;
+
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
 	uint8_t window_a;			// deprecated

@@ -11,15 +11,6 @@ uint64_t currentLinePosition = 0;
 
 static char buffer[BUFFER_SIZE] = { '0' };
 
-
-typedef enum CursorMovementType {
-    CURSOR_TYPING,
-    CURSOR_DELETING,
-    CURSOR_NEWLINE,
-    CURSOR_PREVIOUS,
-    CURSOR_MOVING
-} CursorMovementType;
-
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     uint8_t * framebuffer = (uint8_t *) VBE_mode_info->framebuffer;
     uint64_t offset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
