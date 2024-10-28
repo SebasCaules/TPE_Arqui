@@ -13,8 +13,26 @@ static module modules[] = {
     {"snake", snake},
     {"getregs", getRegs},
     {"opcode", opCode},
-    {"divzero", divZero}
+    {"divzero", divZero},
+    {"song", song_player}
 };
+
+Note do4_scale[] = {
+    {261, NEGRA, 0},  // C4
+    {293, NEGRA, 0},  // D4
+    {329, NEGRA, 0},  // E4
+    {349, NEGRA, 0},  // F4
+    {392, NEGRA, 0},  // G4
+    {440, NEGRA, 0},  // A4
+    {493, NEGRA, 0},  // B4
+    {523, NEGRA, 0}   // C5
+};
+
+Song song = {do4_scale, 120, 8};  // 120 BPM, 8 notes
+
+void song_player() {
+    play_song(song);
+}
 
 void help() {
     puts("Available Commands: ");

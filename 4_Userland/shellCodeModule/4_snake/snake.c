@@ -139,6 +139,9 @@ void checkSnake(Snake * snake) {
 
         // no anda el beep
         beep(500, 200);
+        beep(500, 200);
+        beep(500, 200);
+        beep(500, 200);
         growSnake(snake);
         updateSnake(snake);
         snake->score++;

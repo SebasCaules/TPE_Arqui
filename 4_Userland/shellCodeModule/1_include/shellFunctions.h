@@ -3,6 +3,7 @@
 #include <snake.h>
 #include <exceptions.h>
 #include <stddef.h>
+#include <songplayer.h>
 
 #define WELCOME_MESSAGE "Welcome to the terminal %s!\n"
 #define PROMPT "%s@userland ~ $ "
@@ -12,6 +13,8 @@ typedef struct module {
     char *name;
     void (*function)();
 } module;
+
+void song_player();
 
 /**
  * @brief Displays a help message listing available commands.

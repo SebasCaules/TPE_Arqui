@@ -1,6 +1,5 @@
 // https://wiki.osdev.org/PC_Speaker
 #include <audioDriver.h>
-#include <syscalls.h>
 
 int inb(int port);
 void outb(int port, int value);
