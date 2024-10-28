@@ -12,10 +12,12 @@
 #define INITIAL_SNAKE_LENGTH 3
 
 #define BLACK 0x00000000
-#define FOOD_COLOR 0x00FF0000
-#define GREEN 0x0000FF00
-#define BLUE 0x000000FF
+#define FOOD_COLOR 0x00FF4500
+#define GREEN 0x0032CD32
+#define BLUE 0x001E90FF
 #define BACKGROUND_COLOR 0x003b3b3b
+#define GRID_COLOR_1 0x00CCFFCC
+#define GRID_COLOR_2 0x00B2FFB2
 
 #define BASE_TIME 200
 
@@ -91,7 +93,7 @@ void awaitStart() {
                 continue;
             }
             clearView();
-            drawCanvas();
+            drawBackground();
             gameHasStarted = 1;
             initializeSnakes();
             updatePlayerScores();
@@ -136,12 +138,12 @@ void play() {
 void checkSnake(Snake * snake) {
     updateSnake(snake);
     if (checkFood(snake)) {
+        
+        // muy molesto, no usar en publico
+        beep(400, 100);
+        beep(600, 100);
+        beep(800, 100);
 
-        // no anda el beep
-        beep(500, 200);
-        beep(500, 200);
-        beep(500, 200);
-        beep(500, 200);
         growSnake(snake);
         updateSnake(snake);
         snake->score++;
@@ -373,7 +375,7 @@ void drawSnakeSection(int x, int y, int color) {
 }
 
 void removeSnakeSection(int x, int y) {
-    drawRectangle(leftBorder + x * SQUARE_SIDE, y * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, BACKGROUND_COLOR);
+    drawRectangle(leftBorder + x * SQUARE_SIDE, y * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, getColorForCell(x, y));
 }
 
 int askNumOfPlayers() {
@@ -407,9 +409,23 @@ void updatePlayerScores() {
     }
 }
 
-void drawCanvas() {
+void drawBackground() {
+    int backgroundColor;
     if (gameHasStarted) {
         return;
     }
-    drawRectangle(leftBorder, 0, CANVAS_SIDE, CANVAS_SIDE, BACKGROUND_COLOR);
+    for (int i = 0; i < GRID_SIZE; i++) {
+        for (int j = 0; j < GRID_SIZE; j++) {
+            if ((i + j) % 2 == 0) {
+                backgroundColor = GRID_COLOR_1;
+            } else {
+                backgroundColor = GRID_COLOR_2;
+            }
+            drawRectangle(leftBorder + i * SQUARE_SIDE, j * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, backgroundColor);
+        }
+    }
+}
+
+int getColorForCell(int x, int y) {
+    return ((x + y) % 2 == 0) ? GRID_COLOR_1 : GRID_COLOR_2;
 }
