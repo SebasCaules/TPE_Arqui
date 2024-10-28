@@ -22,7 +22,7 @@ void help() {
     puts("  time            - Display the current system time.");
     puts("  setfont <scale> - Adjust the font size. Replace <scale> with 1 or 2.");
     puts("  clear           - Clear the terminal screen.");
-    puts("  convert         - Converts a number of any base to any other base (EX: convert 10 2 10)");
+    puts("  convert         - Converts a number of any base to any other base (EX: convert d b 8, OUT: 1000b)");
     puts("  snake           - Starts the Snake game.");
     puts("  getregs         - Display the contents of the CPU's registers.");
     puts("  divzero         - Throws the exception division by zero");
