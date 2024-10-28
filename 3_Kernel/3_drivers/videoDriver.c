@@ -100,17 +100,11 @@ void deleteChar() {
     if (!canDelete()) {
         return;
     }
-
-    // no anda del todo bien todavia
-    // Check if we are at the beginning of the line
     if (currentX <= BORDER_PADDING) {
         updateTextCursor(CURSOR_PREVIOUS);
-        // Move to the previous line
         currentY -= (CHAR_HEIGHT + VERTICAL_PADDING) * fontScale;
-        // Set currentX to the end of the previous line
         currentX = WINDOW_WIDTH - BORDER_PADDING - (CHAR_WIDTH + HORIZONTAL_PADDING) * fontScale;
     } else {
-        // Regular delete on the same line
         currentX -= CHAR_WIDTH * fontScale + HORIZONTAL_PADDING;
     }
     drawRectangle(currentX, currentY, CHAR_WIDTH * fontScale + HORIZONTAL_PADDING, CHAR_HEIGHT * fontScale, 0x00000000); // ACA
