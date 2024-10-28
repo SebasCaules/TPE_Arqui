@@ -1,15 +1,1 @@
 
-1_Image/x64BareBonesImage.vmdk
-1_Image/x64BareBonesImage.vmdk
-1_Image/x64BareBonesImage.qcow2
-1_Image/x64BareBonesImage.img
-*.o
-*.bin
-*.bin
-1_Image/packedKernel.bin
-1_Image/x64BareBonesImage.img
-1_Image/x64BareBonesImage.qcow2
-1_Image/x64BareBonesImage.vmdk
-3_Kernel/kernel.bin
-4_Userland/0000-shellCodeModule.bin
-4_Userland/shellCodeModule/3_main/shellCodeModule.o
