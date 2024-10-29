@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <stdlib.h>
+#include <stdLib.h>
 #include <snake.h>
 #include <exceptions.h>
 #include <stddef.h>
@@ -18,7 +18,6 @@ typedef struct module {
     void (*function)();
 } module;
 
-void spotifyInterface();
 
 /**
  * @brief Displays a help message listing available commands.
@@ -40,6 +39,16 @@ void changeFontScale(int scale);
  * @brief Clears the terminal screen.
  */
 void clearTerminal();
+
+/**
+ * @brief Handles the spotify (clone) interface
+*/
+void spotifyInterface();
+
+/**
+ * @brief Handles the piano interface
+*/
+void pianoInterface();
 
 /**
  * @brief Retrieves and displays the current values of CPU registers.

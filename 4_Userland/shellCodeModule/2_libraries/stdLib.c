@@ -49,10 +49,8 @@ static uint64_t typeToBuffer(char* buffer, uint64_t length, va_list args, Types 
 	return ret;
 }
 
-static int printArgs(uint64_t fd, const char* fmt, va_list args) {
-    char buffer[BUFFER_SIZE];
+static uint64_t argsToBuffer(char* buffer, const char* fmt, va_list args) {
     uint64_t length = 0;
-
     for (uint64_t i = 0; fmt[i]; i++) {
         char fmtSpecifier;
         if(fmt[i] == '%' && (fmtSpecifier = fmt[i + 1]) != '\0') {
@@ -84,6 +82,20 @@ static int printArgs(uint64_t fd, const char* fmt, va_list args) {
             buffer[length++] = fmt[i];
         }
     }
+    return length;
+}
+
+uint64_t vargsToBuffer(char* buffer, const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    uint64_t length = argsToBuffer(buffer, fmt, args);
+    va_end(args);
+    return length;
+}
+
+static int printArgs(uint64_t fd, const char* fmt, va_list args) {
+    char buffer[BUFFER_SIZE];
+    uint64_t length = argsToBuffer(buffer, fmt, args);
     return sys_write(fd, buffer, length);
 }
 
@@ -284,31 +296,32 @@ static void from_decimal(int decimal, int base, char *buffer) {
     }
 }
 
-void convert(char initBase, char finalBase, char *num) {
+char* convert(char initBase, char finalBase, char *num) {
     int initBaseValue = get_base_from_char(initBase);
     int finalBaseValue = get_base_from_char(finalBase);
+    static char* bufferRet[BUFFER_SIZE];
 
     if (initBaseValue == -1 || finalBaseValue == -1) {
-        printf("The initial and final base must be one of: 'b', 'o', 'd', 'h'\n");
-        return;
+        return "The initial and final base must be one of: 'b', 'o', 'd', 'h'\n";
     }
 
     int decimal = to_decimal(num, initBaseValue);
     if (decimal == -1) {
-        printf("Invalid number %s for base %c\n", num, initBase);
-        return;
+        vargsToBuffer(bufferRet, "Invalid number %s for base %c\n", num, initBase);
+        return bufferRet;
     }
 
     char convertedNum[BUFFER_SIZE];
     from_decimal(decimal, finalBaseValue, convertedNum);
 
     if(finalBaseValue == 2){
-        printf("Number %s in base %c: %sb\n", num, initBase, convertedNum, finalBase);
+        vargsToBuffer(bufferRet, "Number %s in base %c: %sb\n", num, initBase, convertedNum, finalBase);
     }
     else if(finalBaseValue == 16){
-        printf("Number %s in base %c: 0x%s\n", num, initBase, convertedNum, finalBase);
+        vargsToBuffer(bufferRet, "Number %s in base %c: 0x%s\n", num, initBase, convertedNum, finalBase);
     }
     else {
-        printf("Number %s in base %c is %s in base %c\n", num, initBase, convertedNum, finalBase);
+        vargsToBuffer(bufferRet, "Number %s in base %c is %s in base %c\n", num, initBase, convertedNum, finalBase);
     }
+    return bufferRet;
 }

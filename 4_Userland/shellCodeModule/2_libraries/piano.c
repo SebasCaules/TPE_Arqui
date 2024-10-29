@@ -1,35 +1,5 @@
 #include <piano.h>
 
-typedef enum {
-    C = 261,
-    C_SHARP = 277,
-    D = 293,
-    D_SHARP = 311,
-    E = 329,
-    F = 349,
-    F_SHARP = 370,
-    G = 392,
-    G_SHARP = 415,
-    A = 440,
-    A_SHARP = 466,
-    B = 494
-} middleCNotes;
-
-// Define frequencies for notes
-#define DO 262
-#define RE 294
-#define MI 330
-#define FA 349
-#define SOL 392
-#define LA 440
-#define SI 494
-
-#define DO_SHARP 277
-#define RE_SHARP 311
-#define FA_SHARP 370
-#define SOL_SHARP 415
-#define LA_SHARP 466
-
 //DO:W, RE:E, MI:R, FA:T, SOL:Y, LA:U, SI:I
 //DO#:3, RE#:4, FA#:6, SOL#:7, LA#:8
 

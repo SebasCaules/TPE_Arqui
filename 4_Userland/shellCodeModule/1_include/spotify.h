@@ -3,7 +3,22 @@
 #include <stdLib.h>
 #include <strLib.h>
 
-#define NUMBER_OF_SONGS 7
+#define NUMBER_OF_SONGS 4
+
+#define D_SHARP_4 311    // D#4
+#define F4 349           // F4
+#define F_SHARP_4 370    // F#4
+#define G4 392           // G4
+#define G_SHARP_4 415    // G#4
+#define A_SHARP_4 466    // A#4
+#define C5 523           // C5
+#define D5 587           // D5
+
+#define D2 73    // D2
+#define G2 98    // G2 
+#define A2 110   // A2 
+#define D3 146   // D3 
+#define F3 175   // F3
 
 typedef enum {
     REDONDA = 16,
@@ -25,4 +40,9 @@ typedef struct {
     uint64_t numberOfNotes;
 } Song;
 
+
+/**
+ * @brief Plays a song from it's db byt hte number passed by the user
+*/
 void playSong(char number);
+

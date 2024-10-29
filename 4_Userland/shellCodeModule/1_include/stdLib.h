@@ -144,6 +144,6 @@ void beep(int freq, int milliseconds);
  * @param finalBase The desired base of the number.
  * @param num The number to be converted, represented as a string.
  */
-void convert(char initBase, char finalBase, char* num);
+char* convert(char initBase, char finalBase, char* num);
 
 #endif //TPE_ARQUI_STDLIB_H

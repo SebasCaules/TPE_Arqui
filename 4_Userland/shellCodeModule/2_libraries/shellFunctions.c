@@ -1,5 +1,4 @@
 #include <shellFunctions.h>
-#include <stdLib.h>
 
 static void toUtcMinus3(time_struct * time);
 
@@ -21,38 +20,12 @@ static module modules[] = {
     {"clear", clearTerminal},
     {"convert", convert},
     {"snake", snake},
+    {"spotify", spotifyInterface},
+    {"piano", pianoInterface},
     {"getregs", getRegs},
     {"opcode", opCode},
-    {"divzero", divZero},
-    {"song", spotifyInterface},
-    {"piano", playKeys}
+    {"divzero", divZero}
 };
-
-
-void spotifyInterface() {
-	clearView();
-    puts("Welcome to the Spotify (clone) interface!\n");
-    puts("Here is a list of our repertoire:\n");
-    puts("1-The scale of C4. \n");
-    puts("2-The happy birthday song. \n");
-    puts("3-Rezo por vos, Charly García y Luis Alberto Spinetta. \n");
-    puts("4-Money, Pink Floyd. \n");
-    puts("Press q to go back to the terminal.\n");
-    char c[MAX_COMMAND_LENGTH + 1];
-    int readLength;
-    do {
-        putsNoNewLine("Please choose the number of option you want to play: ");
-        readLength = gets(c, MAX_COMMAND_LENGTH);
-        if(readLength > 1) {
-            puts("Input only one digit");
-        } else if(c[0] >= '1' && c[0] <= (NUMBER_OF_SONGS+48)) {
-            playSong(c[0]);
-        } else {
-            puts("Input a number between 1 and 4");
-        }
-    } while (c[0] != 'q');
-    clearView();
-}
 
 void help() {
     puts("Available Commands: ");
@@ -62,6 +35,8 @@ void help() {
     puts("  clear           - Clear the terminal screen.");
     puts("  convert         - Converts a number to another base. e.g. convert d b 8");
     puts("  snake           - Starts the Snake game.");
+    puts("  spotify         - Starts the spotify (clone) interface.");
+    puts("  piano           - Starts the piano interface.");
     puts("  getregs         - Display the registers's contents.");
     puts("  divzero         - Throws division by zero exc.");
     puts("  opcode          - Throws invalid opcode exc.");
@@ -85,6 +60,41 @@ void changeFontScale(int scale) {
 
 void clearTerminal() {
     clearView();
+}
+
+
+void spotifyInterface() {
+	clearView();
+    puts("Welcome to the Spotify (clone) interface!\n");
+    puts("Here is a list of our repertoire:\n");
+    puts("1 - The scale of C4.\n");
+    puts("2 - The happy birthday song.\n");
+    puts("3 - Adios nonino, Astor Piazzola.\n");
+    puts("4 - Come together, The Beatles.\n");
+    puts("Press q to go back to the terminal.\n");
+    char c[MAX_COMMAND_LENGTH + 1];
+    int readLength;
+    do {
+        putsNoNewLine("Please choose the number of option you want to play: ");
+        readLength = gets(c, MAX_COMMAND_LENGTH);
+        if(readLength > 1) {
+            puts("Input only one digit");
+        } else if(c[0] >= '1' && c[0] <= (NUMBER_OF_SONGS+48)) {
+            playSong(c[0]);
+        } else {
+            puts("Input a number between 1 and 4");
+        }
+    } while (c[0] != 'q');
+    clearView();
+}
+
+void pianoInterface() {
+    clearView();
+    puts("Welcome to the piano simulator (beta) interface!\n");
+    puts("The piano start at the middle C octave, C4. To increase the octave by one please play the keys while pushing the \'SHIFT\' key\n");
+    puts("\'W\':C, \'E\':D, \'R\':E, \'T\':F, \'Y\':G, \'U\':A, \'I\':B, \'O\':C\n");
+    puts("\'3\':C#, \'4\':D#, \'6\':F#, \'7\':G#, \'8\':A#\n");
+    playKeys();
 }
 
 void getRegs() {
@@ -148,7 +158,7 @@ void getCmdInput() {
         if (!isConvertValid(words)) {
             puts("Invalid command. convert <b1> <b2> <num (in b1)>");
         }
-        convert(words[1][0], words[2][0], words[3]);
+        printf(convert(words[1][0], words[2][0], words[3]));
         return;
     }
 
