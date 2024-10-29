@@ -1,11 +1,15 @@
 #include <stdint.h>
 #include <syscallsInt.h>
+#include <stdLib.h>
+#include <strLib.h>
+
+#define NUMBER_OF_SONGS 7
 
 typedef enum {
     REDONDA = 16,
     BLANCA = 8,
     NEGRA = 4,
-    COCRCHEA = 2,
+    CORCHEA = 2,
     SEMI_CORCHEA = 1
 } NoteTypes;
 
@@ -21,4 +25,4 @@ typedef struct {
     uint64_t numberOfNotes;
 } Song;
 
-void play_song(Song song);
+void playSong(char number);

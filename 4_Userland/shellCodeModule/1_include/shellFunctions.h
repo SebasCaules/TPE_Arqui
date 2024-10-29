@@ -3,18 +3,19 @@
 #include <snake.h>
 #include <exceptions.h>
 #include <stddef.h>
-#include <songplayer.h>
+#include <spotify.h>
+#include <piano.h>
 
 #define WELCOME_MESSAGE "Welcome to the terminal %s!\n"
 #define PROMPT "%s@userland ~ $ "
-#define NUM_MODULES 9
+#define NUM_MODULES 11
 
 typedef struct module {
     char *name;
     void (*function)();
 } module;
 
-void song_player();
+void spotifyInterface();
 
 /**
  * @brief Displays a help message listing available commands.

@@ -16,6 +16,13 @@ int strcmp(const char *str1, const char *str2) {
     return *(unsigned char *)str1 - *(unsigned char *)str2;
 }
 
+char isNumber(char c) {
+    if(c >= 48 && c <= 57) {
+        return 1;
+    }
+    return 0;
+}
+
 char toLowercase(char c) {
     if (c >= 'A' && c <= 'Z') {
         return c + 32;
@@ -28,6 +35,13 @@ char toUppercase(char c) {
         return c - 32;
     }
     return c;
+}
+
+char isUpper(char c) {
+    if((c >= 33 && c <= 43) || (c >= 65 && c <= 90)) {
+        return 1;
+    }
+    return 0;
 }
 
 int isspace(int c) {

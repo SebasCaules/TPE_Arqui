@@ -22,6 +22,10 @@ uint64_t strlen(const char *str);
  */
 int strcmp(const char *str1, const char *str2);
 
+char isNumber(char c);
+
+char isUpper(char c);
+
 /**
  * @brief Converts a character to lowercase.
  * @param c The character to convert.

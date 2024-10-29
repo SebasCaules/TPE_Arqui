@@ -138,12 +138,6 @@ void play() {
 void checkSnake(Snake * snake) {
     updateSnake(snake);
     if (checkFood(snake)) {
-        
-        // muy molesto, no usar en publico
-        beep(400, 100);
-        beep(600, 100);
-        beep(800, 100);
-
         growSnake(snake);
         updateSnake(snake);
         snake->score++;

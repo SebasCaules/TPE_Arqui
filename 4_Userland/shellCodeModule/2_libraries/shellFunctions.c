@@ -14,24 +14,34 @@ static module modules[] = {
     {"getregs", getRegs},
     {"opcode", opCode},
     {"divzero", divZero},
-    {"song", song_player}
+    {"song", spotifyInterface},
+    {"piano", playKeys}
 };
 
-Note do4_scale[] = {
-    {261, NEGRA, 0},  // C4
-    {293, NEGRA, 0},  // D4
-    {329, NEGRA, 0},  // E4
-    {349, NEGRA, 0},  // F4
-    {392, NEGRA, 0},  // G4
-    {440, NEGRA, 0},  // A4
-    {493, NEGRA, 0},  // B4
-    {523, NEGRA, 0}   // C5
-};
 
-Song song = {do4_scale, 120, 8};  // 120 BPM, 8 notes
-
-void song_player() {
-    play_song(song);
+void spotifyInterface() {
+	clearView();
+    puts("Welcome to the Spotify (clone) interface!\n");
+    puts("Here is a list of our repertoire:\n");
+    puts("1-The scale of C4. \n");
+    puts("2-The happy birthday song. \n");
+    puts("3-Rezo por vos, Charly García y Luis Alberto Spinetta. \n");
+    puts("4-Money, Pink Floyd. \n");
+    puts("Press q to go back to the terminal.\n");
+    char c[MAX_COMMAND_LENGTH + 1];
+    int readLength;
+    do {
+        putsNoNewLine("Please choose the number of option you want to play: ");
+        readLength = gets(c, MAX_COMMAND_LENGTH);
+        if(readLength > 1) {
+            puts("Input only one digit");
+        } else if(c[0] >= '1' && c[0] <= (NUMBER_OF_SONGS+48)) {
+            playSong(c[0]);
+        } else {
+            puts("Input a number between 1 and 4");
+        }
+    } while (c[0] != 'q');
+    clearView();
 }
 
 void help() {
