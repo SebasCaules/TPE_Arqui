@@ -16,13 +16,6 @@ int strcmp(const char *str1, const char *str2) {
     return *(unsigned char *)str1 - *(unsigned char *)str2;
 }
 
-char isNumber(char c) {
-    if(c >= 48 && c <= 57) {
-        return 1;
-    }
-    return 0;
-}
-
 char toLowercase(char c) {
     if (c >= 'A' && c <= 'Z') {
         return c + 32;
@@ -201,4 +194,12 @@ int stringToInt(const char *str) {
     }
 
     return result;
+}
+
+int isNumber(char c) {
+    return (c >= '0' && c <= '9');
+}
+
+int isCharacter(char c) {
+    return ((c >= 'a' && c <= 'z'));
 }

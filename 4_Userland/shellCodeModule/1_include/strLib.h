@@ -22,8 +22,11 @@ uint64_t strlen(const char *str);
  */
 int strcmp(const char *str1, const char *str2);
 
-char isNumber(char c);
-
+/**
+ * @brief checks if a character is uppercase.
+ * @param c The character to check.
+ * @return Returns 1 if c is uppercase, 0 if not.
+ */
 char isUpper(char c);
 
 /**
@@ -87,6 +90,20 @@ int convert_to_base_string(int number, int base, char *buffer);
  * @return The integer value of the string.
  */
 int stringToInt(const char *str);
+
+/**
+ * @brief Checks if a character is a numerical digit.
+ * @param c The character to be checked.
+ * @return 1 if the character is a digit (0-9), 0 otherwise.
+ */
+int isNumber(char c);
+
+/**
+ * @brief Checks if a character is an alphabetical letter.
+ * @param c The character to be checked.
+ * @return 1 if the character is a letter (a-z, A-Z), 0 otherwise.
+ */
+int isCharacter(char c);
 
 #endif //TPE_ARQUI_STRLIB_H
 

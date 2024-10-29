@@ -10,6 +10,9 @@ void showTime();
 void clearTerminal();
 void getRegs();
 void song_player();
+int isValidBase(const char *base);
+int isNumberInBase(const char *num, const char *base);
+int isConvertValid(char words[MAX_WORDS][MAX_WORD_LENGTH]);
 
 static module modules[] = {
     {"help", help},
@@ -55,13 +58,13 @@ void help() {
     puts("Available Commands: ");
     puts("  help            - Shows all available commands.");
     puts("  time            - Display the current system time.");
-    puts("  setfont <scale> - Adjust the font size. Replace <scale> with 1 or 2.");
+    puts("  setfont <scale> - Adjust the font size. (1 or 2)");
     puts("  clear           - Clear the terminal screen.");
-    puts("  convert         - Converts a number of any base to any other base (EX: convert d b 8, OUT: 1000b)");
+    puts("  convert         - Converts a number to another base. e.g. convert d b 8");
     puts("  snake           - Starts the Snake game.");
-    puts("  getregs         - Display the contents of the CPU's registers.");
-    puts("  divzero         - Throws the exception division by zero");
-    puts("  opcode          - Throws the exception invalid Opcode");
+    puts("  getregs         - Display the registers's contents.");
+    puts("  divzero         - Throws division by zero exc.");
+    puts("  opcode          - Throws invalid opcode exc.");
 }
 
 void showTime() {
@@ -141,7 +144,10 @@ void getCmdInput() {
         return;
     }
 
-    if(strcmp(words[0], modules[4].name) == 0){
+    if(strcmp(words[0], modules[4].name) == 0) {
+        if (!isConvertValid(words)) {
+            puts("Invalid command. convert <b1> <b2> <num (in b1)>");
+        }
         convert(words[1][0], words[2][0], words[3]);
         return;
     }
@@ -184,4 +190,45 @@ static void toUtcMinus3(time_struct * time) {
     else {
         time->hour = time->hour - 3;
     }
+}
+
+int isValidBase(const char *base) {
+    return (strcmp(base, "d") == 0 || strcmp(base, "b") == 0 || strcmp(base, "h") == 0);
+}
+
+int isNumberInBase(const char *num, const char *base) {
+    if (strcmp(base, "d") == 0) { // Decimal
+        for (int i = 0; num[i] != '\0'; i++) {
+            if (!isNumber(num[i])) return 0;
+        }
+    } else if (strcmp(base, "b") == 0) { // Binary
+        for (int i = 0; num[i] != '\0'; i++) {
+            if (num[i] != '0' && num[i] != '1') return 0;
+        }
+    } else if (strcmp(base, "h") == 0) { // Hexadecimal
+        for (int i = 0; num[i] != '\0'; i++) {
+            if (!isNumber(num[i]) && !(num[i] >= 'a' && num[i] <= 'f') && !(num[i] >= 'A' && num[i] <= 'F')) {
+                return 0;
+            }
+        }
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int isConvertValid(char words[MAX_WORDS][MAX_WORD_LENGTH]) {
+    if (strcmp(words[0], "convert") != 0) {
+        return 0;
+    }
+    
+    if (!isValidBase(words[1]) || !isValidBase(words[2])) {
+        return 0;
+    }
+
+    if (!isNumberInBase(words[3], words[1])) {
+        return 0;
+    }
+
+    return 1;
 }
