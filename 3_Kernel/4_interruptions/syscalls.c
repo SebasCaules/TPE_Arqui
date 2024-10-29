@@ -28,19 +28,18 @@ typedef struct {
 } Registers;
 
 uint64_t sysCallHandler(Registers * regs) {
-    uint64_t ret;
     switch (regs->rax) {
-    case SLEEP: return sys_sleep(regs->rdi);
-    case TIME: return sys_time(regs->rdi);
-    case SETFONT: return sys_set_font_scale(regs->rdi);
-    case READ: return sys_read(regs->rdi, regs->rsi, regs->rdx);
-    case WRITE: return sys_write(regs->rdi, regs->rsi, regs->rdx);      
+    case SLEEP: return sys_sleep((uint64_t)regs->rdi);
+    case TIME: return sys_time((time_struct *)regs->rdi);
+    case SETFONT: return sys_set_font_scale((uint64_t)regs->rdi);
+    case READ: return sys_read((uint64_t)regs->rdi, (uint16_t *)regs->rsi, (uint64_t)regs->rdx);
+    case WRITE: return sys_write((uint64_t)regs->rdi, (uint16_t *)regs->rsi, (uint64_t)regs->rdx);      
     case CLEAR: return sys_clear();
-    case DRAW_RECTANGLE: return sys_draw_rectangle(regs->rdi, regs->rsi, regs->rdx, regs->rcx, regs->r8);
+    case DRAW_RECTANGLE: return sys_draw_rectangle((uint64_t)regs->rdi, (uint64_t)regs->rsi, (uint64_t)regs->rdx, (uint64_t)regs->rcx, (uint32_t)regs->r8);
     case TICK: return sys_tick();
     case RESET_CURSOR: return sys_reset_cursor();
-    case GET_REGS: return sys_get_regs(regs->rdi);
-    case BEEP: return sys_beep(regs->rdi, regs->rsi);
+    case GET_REGS: return sys_get_regs((uint64_t *)regs->rdi);
+    case BEEP: return sys_beep((uint64_t)regs->rdi, (uint64_t)regs->rsi);
     default: return 0;
     }
 }
@@ -87,7 +86,7 @@ int64_t sys_read(uint64_t fd, uint16_t * buffer, uint64_t length) {
 
 int64_t sys_write(uint64_t fd, uint16_t * buffer, uint64_t length) {
     uint32_t fileDescriptorStyle[] = {0, 0x00FFFFFF, 0x00FF0000, 0x0000FF00};
-    return printStrByLength(buffer, fileDescriptorStyle[fd], 0x00000000, length);
+    return printStrByLength((char *)buffer, fileDescriptorStyle[fd], 0x00000000, length);
 }
 
 int64_t sys_clear() {
