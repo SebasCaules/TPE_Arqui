@@ -48,6 +48,31 @@ Snake snake1;
 Snake snake2;
 Position food;
 
+static void presentStartView();
+static void startGame();
+static void awaitStart();
+static void play();
+static void checkSnake(Snake * snake);
+static void endWithMessage(char * message);
+static int askReplay();
+static void placeFood();
+static void initializeSnakes();
+static void initializeSnake(Snake * snake, int color, int offset);
+static void updateSnake(Snake * snake);
+static void growSnake(Snake * snake);
+static int checkCollisions(Snake * snake1, Snake * snake2);
+static int checkCollisionForSnake(Snake * snake);
+static int checkInterSnakeCollision(Snake * snake1, Snake * snake2);
+static int checkFood(Snake * snake);
+static void handleKeyPresses(char c);
+static void drawSnakeSection(int x, int y, int color);
+static void removeSnakeSection(int x, int y);
+static int askNumOfPlayers();
+static int askDifficulty();
+static void updatePlayerScores();
+static void drawBackground();
+static int getColorForCell(int x, int y);
+
 int snake() {
     leftBorder = (WINDOW_WIDTH - CANVAS_SIDE - 1);
 
@@ -68,7 +93,7 @@ int snake() {
 
 }
 
-void presentStartView() {
+static void presentStartView() {
     clearView();
     puts("Welcome to Snake game!");
     puts("Player 1 uses W/A/S/D. Player 2 uses I/J/K/L.");
@@ -78,12 +103,12 @@ void presentStartView() {
 
 }
 
-void startGame() {
+static void startGame() {
     awaitStart();
     play();
 }
 
-void awaitStart() {
+static void awaitStart() {
     puts("Press SPACE to start playing...");
 
     while (1) {
@@ -103,14 +128,14 @@ void awaitStart() {
     }
 }
 
-void play() {
+static void play() {
     int bufferSize;
 
     while(1) {
 
         bufferSize = 0;
         bufferSize = readInput(&pressedKey);
-
+        pressedKey = toLowercase(pressedKey);
         if (bufferSize > 0) {
             handleKeyPresses(pressedKey);
         }
@@ -135,14 +160,15 @@ void play() {
     }
 }
 
-void checkSnake(Snake * snake) {
+static void checkSnake(Snake * snake) {
     updateSnake(snake);
     if (checkFood(snake)) {
-        
+
+        // caga mucho la experiencia del juego. queda trabado por 300 ms
         // muy molesto, no usar en publico
-        beep(400, 100);
-        beep(600, 100);
-        beep(800, 100);
+        // beep(400, 100);
+        // beep(600, 100);
+        // beep(800, 100);
 
         growSnake(snake);
         updateSnake(snake);
@@ -152,7 +178,7 @@ void checkSnake(Snake * snake) {
     }
 }
 
-void endWithMessage(char * message) {
+static void endWithMessage(char * message) {
     clearView();
     puts(message);
     printf("Player 1: %d\n", snake1.score);
@@ -163,7 +189,7 @@ void endWithMessage(char * message) {
     clearView();
 }
 
-int askReplay() {
+static int askReplay() {
     puts("Press SPACE to play again...");
     puts("Press q to quit...");
 
@@ -177,7 +203,7 @@ int askReplay() {
     }
 }
 
-void placeFood() {
+static void placeFood() {
     int randomPosition, xPos, yPos, isOnSnake;
 
     do {
@@ -211,7 +237,7 @@ void placeFood() {
     drawRectangle(leftBorder + xPos * SQUARE_SIDE, yPos * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, FOOD_COLOR);
 }
 
-void initializeSnakes() {
+static void initializeSnakes() {
     initializeSnake(&snake1, GREEN, -(INITIAL_SPACING / 2));
     if (numOfPlayers == 1) {
         return;
@@ -219,7 +245,7 @@ void initializeSnakes() {
     initializeSnake(&snake2, BLUE, INITIAL_SPACING / 2);
 }
 
-void initializeSnake(Snake * snake, int color, int offset) {
+static void initializeSnake(Snake * snake, int color, int offset) {
     snake->length = INITIAL_SNAKE_LENGTH;
     snake->direction.x = 1;
     snake->direction.y = 0;
@@ -232,7 +258,7 @@ void initializeSnake(Snake * snake, int color, int offset) {
     }
 }
 
-void updateSnake(Snake * snake) {
+static void updateSnake(Snake * snake) {
     removeSnakeSection(snake->positions[snake->length-1].x, snake->positions[snake->length-1].y);
     for (int i = snake->length - 1; i > 0; i--) {
         snake->positions[i] = snake->positions[i-1];
@@ -242,12 +268,12 @@ void updateSnake(Snake * snake) {
     drawSnakeSection(snake->positions[0].x, snake->positions[0].y, snake->color);
 }
 
-void growSnake(Snake * snake) {
+static void growSnake(Snake * snake) {
     snake->length++;
     snake->positions[snake->length - 1] = snake->positions[snake->length - 2];
 }
 
-int checkCollisions(Snake * snake1, Snake * snake2) {
+static int checkCollisions(Snake * snake1, Snake * snake2) {
     if (checkCollisionForSnake(snake1)) {
         return 1;
     }
@@ -266,7 +292,7 @@ int checkCollisions(Snake * snake1, Snake * snake2) {
     return 0;
 }
 
-int checkCollisionForSnake(Snake * snake) {
+static int checkCollisionForSnake(Snake * snake) {
     if (snake->positions[0].x < 0 || snake->positions[0].x >= GRID_SIZE || 
         snake->positions[0].y < 0 || snake->positions[0].y >= GRID_SIZE) {
             return 1;
@@ -280,7 +306,7 @@ int checkCollisionForSnake(Snake * snake) {
     return 0;
 }
 
-int checkInterSnakeCollision(Snake * snake1, Snake * snake2) {
+static int checkInterSnakeCollision(Snake * snake1, Snake * snake2) {
     for (int i = 0; i < snake2->length; i++) {
         if (snake1->positions[0].x == snake2->positions[i].x && 
         snake1->positions[0].y == snake2->positions[i].y) {
@@ -290,14 +316,13 @@ int checkInterSnakeCollision(Snake * snake1, Snake * snake2) {
     return 0;
 }
 
-int checkFood(Snake * snake) {
+static int checkFood(Snake * snake) {
     return (snake->positions[0].x == food.x && snake->positions[0].y == food.y);
 }
 
-void handleKeyPresses(char c) {
+static void handleKeyPresses(char c) {
     switch (c) {
         case 'w':
-        case 'W':
             if (snake1.direction.y == 1) {
                 break;
             }
@@ -305,7 +330,6 @@ void handleKeyPresses(char c) {
             snake1.direction.y = -1;
             break;
         case 'a':
-        case 'A':
             if (snake1.direction.x == 1) {
                 break;
             }
@@ -313,7 +337,6 @@ void handleKeyPresses(char c) {
             snake1.direction.y = 0;
             break;
         case 's':
-        case 'S':
             if (snake1.direction.y == -1) {
                 break;
             }
@@ -321,7 +344,6 @@ void handleKeyPresses(char c) {
             snake1.direction.y = 1;
             break;
         case 'd':
-        case 'D':
             if (snake1.direction.x == -1) {
                 break;
             }
@@ -336,7 +358,6 @@ void handleKeyPresses(char c) {
 
     switch(c) {
         case 'i':
-        case 'I':
             if (snake2.direction.y == 1) {
                 break;
             }
@@ -344,7 +365,6 @@ void handleKeyPresses(char c) {
             snake2.direction.y = -1;
             break;
         case 'j':
-        case 'J':
             if (snake2.direction.x == 1) {
                 break;
             }
@@ -352,7 +372,6 @@ void handleKeyPresses(char c) {
             snake2.direction.y = 0;
             break;
         case 'k':
-        case 'K':
             if (snake2.direction.y == -1) {
                 break;
             }
@@ -360,7 +379,6 @@ void handleKeyPresses(char c) {
             snake2.direction.y = 1;
             break;
         case 'l':
-        case 'L':
             if (snake2.direction.x == -1) {
                 break;
             }
@@ -370,15 +388,15 @@ void handleKeyPresses(char c) {
 
 }
 
-void drawSnakeSection(int x, int y, int color) {
+static void drawSnakeSection(int x, int y, int color) {
     drawRectangle(leftBorder + x * SQUARE_SIDE, y * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, color);
 }
 
-void removeSnakeSection(int x, int y) {
+static void removeSnakeSection(int x, int y) {
     drawRectangle(leftBorder + x * SQUARE_SIDE, y * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, getColorForCell(x, y));
 }
 
-int askNumOfPlayers() {
+static int askNumOfPlayers() {
     char buffer[2];
     int numOfPlayers;
     do {
@@ -389,7 +407,7 @@ int askNumOfPlayers() {
     return numOfPlayers;
 }
 
-int askDifficulty() {
+static int askDifficulty() {
     char buffer[2];
     int difficulty;
     do {
@@ -400,7 +418,7 @@ int askDifficulty() {
     return difficulty;
 }
 
-void updatePlayerScores() {
+static void updatePlayerScores() {
     resetCursor();
     drawRectangle(0, 0, 200, 200, BLACK);
     printf("Player 1: %d\n", snake1.score);
@@ -409,7 +427,7 @@ void updatePlayerScores() {
     }
 }
 
-void drawBackground() {
+static void drawBackground() {
     int backgroundColor;
     if (gameHasStarted) {
         return;
@@ -426,6 +444,6 @@ void drawBackground() {
     }
 }
 
-int getColorForCell(int x, int y) {
+static int getColorForCell(int x, int y) {
     return ((x + y) % 2 == 0) ? GRID_COLOR_1 : GRID_COLOR_2;
 }

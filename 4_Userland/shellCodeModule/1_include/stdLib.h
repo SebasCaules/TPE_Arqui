@@ -7,8 +7,6 @@
 #define TPE_ARQUI_STDLIB_H
 #define VRGCLI
 
-#define MAX_COMMAND_LENGTH 128
-#define MAX_USERNAME_LENGTH 32
 #define EOF (-1)
 
 typedef enum {

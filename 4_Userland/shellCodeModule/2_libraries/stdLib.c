@@ -52,10 +52,7 @@ static uint64_t typeToBuffer(char* buffer, uint64_t length, va_list args, Types 
 static int printArgs(uint64_t fd, const char* fmt, va_list args) {
     char buffer[BUFFER_SIZE];
     uint64_t length = 0;
-    uint64_t modCounter = 0;
 
-	int formatSpecifierCount = 0;
-    int argumentCount = 0;
     for (uint64_t i = 0; fmt[i]; i++) {
         char fmtSpecifier;
         if(fmt[i] == '%' && (fmtSpecifier = fmt[i + 1]) != '\0') {
@@ -114,7 +111,7 @@ int scanf(const char *format, ...) {
     int index = 0;
 
 
-    while (sys_read(STDIN, &buffer[index], 1) > 0 && buffer[index] != '\n') {
+    while (sys_read(STDIN, (uint16_t *)&buffer[index], 1) > 0 && buffer[index] != '\n') {
         index++;
     }
     buffer[index] = '\0'; 
@@ -163,7 +160,7 @@ int readInput(char * c) {
 }
 
 int putchar(char c) {
-    sys_write(STDOUT, &c, 1);
+    return sys_write(STDOUT, (uint16_t *)&c, 1);
 }
 
 int putsNoNewLine(const char *fmt) {
@@ -306,10 +303,10 @@ void convert(char initBase, char finalBase, char *num) {
     from_decimal(decimal, finalBaseValue, convertedNum);
 
     if(finalBaseValue == 2){
-        printf("Number %s in base %c is %sb\n", num, initBase, convertedNum, finalBase);
+        printf("Number %s in base %c: %sb\n", num, initBase, convertedNum, finalBase);
     }
     else if(finalBaseValue == 16){
-        printf("Number %s in base %c is 0x%s\n", num, initBase, convertedNum, finalBase);
+        printf("Number %s in base %c: 0x%s\n", num, initBase, convertedNum, finalBase);
     }
     else {
         printf("Number %s in base %c is %s in base %c\n", num, initBase, convertedNum, finalBase);

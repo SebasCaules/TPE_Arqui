@@ -1,13 +1,20 @@
 #include <shellFunctions.h>
+#include <stdLib.h>
 
 static void toUtcMinus3(time_struct * time);
 
 static char username[MAX_USERNAME_LENGTH] = { 0 };
 
+void help();
+void showTime();
+void clearTerminal();
+void getRegs();
+void song_player();
+
 static module modules[] = {
     {"help", help},
     {"time", showTime},
-    {"setfont", setFontScale},
+    {"setfont", changeFontScale},
     {"clear", clearTerminal},
     {"convert", convert},
     {"snake", snake},
@@ -59,7 +66,7 @@ void showTime() {
 
 void changeFontScale(int scale) {
     if (setFontScale(scale) == -1) {
-        puts("Invalid font scale. Enter a number between 1 and 2");
+        puts("Invalid command. (setfont <scale>) (1 or 2)");
     }
 }
 
@@ -117,7 +124,7 @@ void getCmdInput() {
     }
     if (strcmp(words[0], modules[2].name) == 0) {
         if (wordCount != 2) {
-            puts("Invalid command. (setfont <scale>)");
+            puts("Invalid command. (setfont <scale>) (1 or 2)");
             return;
         }
         changeFontScale(stringToInt(words[1]));
@@ -128,6 +135,7 @@ void getCmdInput() {
         convert(words[1][0], words[2][0], words[3]);
         return;
     }
+
     printf("Command not found: %s\n", words[0]); // Hay que agarrar solo la primera palabra
 }
 

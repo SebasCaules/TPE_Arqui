@@ -7,7 +7,7 @@
 
 extern uint64_t * getSnap();
 
-static throwException(char* msg);
+static int throwException(char* msg);
 static void dumpRegisters();
 
 static char *regNames[] = {
@@ -31,20 +31,21 @@ void exceptionDispatcher(int exception) {
 	return;
 }
 
-static throwException(char* msg) { 
+static int throwException(char* msg) { 
 	sys_clear();
-	sys_write(STDERR, msg, strlength(msg));
+	sys_write(STDERR, (uint16_t *)msg, strlength(msg));
 	dumpRegisters();
 
     char * continueMessage = "\nPress any key to relaunch shell...\n";
-    sys_write(1, continueMessage , strlength(continueMessage));
+    sys_write(1, (uint16_t *)continueMessage , strlength(continueMessage));
 
     int readBytes = 0;
     char c;
     _sti();
     while(readBytes == 0){
-        readBytes = sys_read(0, &c, 1);
+        readBytes = sys_read(0, (uint16_t *)&c, 1);
     }
+    return 0;
 }
 
 static void dumpRegisters(){
@@ -55,12 +56,12 @@ static void dumpRegisters(){
         itoaHex(registers[i], buffer);
         int zeroDigits = 16 - strlength(buffer);
 
-        sys_write(STDOUT, regNames[i], strlength(regNames[i]));
-        sys_write(STDOUT, ": 0x", 4);
+        sys_write(STDOUT, (uint16_t *)regNames[i], strlength(regNames[i]));
+        sys_write(STDOUT, (uint16_t *)": 0x", 4);
         for(int j = 0; j < zeroDigits; j++){
-            sys_write(STDOUT, "0", 1);
+            sys_write(STDOUT, (uint16_t *)"0", 1);
         }
-        sys_write(STDOUT, itoaHex(registers[i], buffer), strlength(buffer));
-        sys_write(STDOUT, "\n", 1);
+        sys_write(STDOUT, (uint16_t *)itoaHex(registers[i], buffer), strlength(buffer));
+        sys_write(STDOUT, (uint16_t *)"\n", 1);
     }
 }

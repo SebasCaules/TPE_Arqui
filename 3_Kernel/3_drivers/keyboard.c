@@ -108,7 +108,6 @@ char isSpecialKey(int key) {
 static char buffer[BUFFER_SIZE];
 static int current = 0;
 static int nextToRead = 0;
-static int nextIndex;
 
 int shiftFlag = 0;
 int capsLockFlag = 0;
@@ -143,7 +142,7 @@ void pressedKey(){
         if(isSpecialKey(c)) {
             buffer[current++] = c;
         } else {
-            char index = shiftFlag;
+            int index = shiftFlag;
             //Chequea que la tecla apretada sea una letra, si lo es y el capslock esta activado se van a poner en mayus
             if(keyValues[c][0] >= 'a' && keyValues[c][0] <= 'z'){
                 index = capsLockFlag ? !shiftFlag : shiftFlag;
