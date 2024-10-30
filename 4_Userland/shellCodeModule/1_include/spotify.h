@@ -3,7 +3,7 @@
 #include <stdLib.h>
 #include <strLib.h>
 
-#define NUMBER_OF_SONGS 4
+#define NUMBER_OF_SONGS 5
 
 #define D_SHARP_4 311    // D#4
 #define F4 349           // F4
@@ -19,6 +19,11 @@
 #define A2 110   // A2 
 #define D3 146   // D3 
 #define F3 175   // F3
+
+#define C_SHARP_4 277  // C#4 frequency in Hz
+#define D4 293        // D4 frequency in Hz
+#define B4 494        // B4 frequency in Hz
+#define A4 440  // A4 frequency in Hz
 
 typedef enum {
     REDONDA = 16,

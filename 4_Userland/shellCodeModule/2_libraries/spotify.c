@@ -45,11 +45,19 @@ static Note come_together_notes[] = {
 	{D2, CORCHEA, 0}, {D2, CORCHEA, 0}, {G2, SEMI_CORCHEA, 0}, {A2, SEMI_CORCHEA, 0}, {F3, CORCHEA}, {F3, NEGRA, 0}, {D3, NEGRA, 0}
 };
 
+static Note lalaland_notes[] = {
+	{C_SHARP_4, BLANCA, 0}, {F_SHARP_4, CORCHEA, 0}, {G_SHARP_4, CORCHEA, 0}, {A4, CORCHEA, 0}, {G_SHARP_4, CORCHEA, 0}, {F_SHARP_4, CORCHEA, 0}, {D4, CORCHEA + NEGRA, 0},
+	{C5, SEMI_CORCHEA/4, 1}, {D4, SEMI_CORCHEA * 3, 0}, {F_SHARP_4, CORCHEA, 0}, {G_SHARP_4, CORCHEA, 0}, {A4, CORCHEA, 0}, {G_SHARP_4, CORCHEA, 0}, {F_SHARP_4, CORCHEA, 0}, {C_SHARP_4, CORCHEA + NEGRA, 0},
+	{C5, SEMI_CORCHEA/4, 1}, {C_SHARP_4, SEMI_CORCHEA * 3, 0}, {F_SHARP_4, CORCHEA, 0}, {G_SHARP_4, CORCHEA, 0}, {A4, CORCHEA, 0}, {G_SHARP_4, CORCHEA, 0}, {F_SHARP_4, CORCHEA, 0}, {D4, CORCHEA + NEGRA, 0},
+	{B4, NEGRA}, {A4, CORCHEA}, {G_SHARP_4, CORCHEA}, {A4, CORCHEA}, {G_SHARP_4, CORCHEA}, {F_SHARP_4, CORCHEA}, {C_SHARP_4, NEGRA}
+};
+
 static Song songList[NUMBER_OF_SONGS] = {
 	{do4_scale, 240, sizeof(do4_scale) / sizeof(Note)}, 
 	{happy_birthday_notes, 120, sizeof(happy_birthday_notes) / sizeof(Note)}, 
 	{adios_nonino_notes, 78, sizeof(adios_nonino_notes) / sizeof(Note)},
-	{come_together_notes, 82, sizeof(come_together_notes) / sizeof(Note)}
+	{come_together_notes, 82, sizeof(come_together_notes) / sizeof(Note)},
+	{lalaland_notes, 112, sizeof(lalaland_notes) / sizeof(Note)}
 };
 
 void playSong(char number) {
