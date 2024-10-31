@@ -22,7 +22,6 @@ typedef enum {
     BEEP
 } syscallsNum;
 
-
 typedef struct {
     uint64_t r15, r14, r13, r12, r11, r10, r9, r8, rsi, rdi, rbp, rdx, rcx, rbx, rax;
 } Registers;
@@ -47,12 +46,10 @@ uint64_t sysCallHandler(Registers * regs) {
 uint64_t sys_sleep(uint64_t milliseconds) {
     unsigned long long initial_time = ms_elapsed();
     unsigned long long currentTime = initial_time;
-    // Activate interrupts
     _sti();
     while ((currentTime - initial_time) <= milliseconds) {
         currentTime = ms_elapsed();
     }
-    // Deactivate interrupts
     _cli();
     return 1;
 }
@@ -116,4 +113,3 @@ uint64_t sys_beep(uint64_t freq, uint64_t milliseconds) {
     beep(freq, milliseconds);
     return 0;
 }
-

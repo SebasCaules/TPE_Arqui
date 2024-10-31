@@ -7,7 +7,6 @@
 #define MAX_PRESS_CODE 0x70
 #define REGS_AMOUNT 17
 
-
 // Define de teclas especiales:
 #define ESC 0x01
 #define ENTER 0x1C
@@ -29,7 +28,6 @@
 #define CTRL_PRESS 0x1D
 #define CTRL_RELEASE 0x9D
 
-
 extern void _updateRegisters();
 extern uint64_t * _getRegisters();
 static void updateRegisters();
@@ -37,7 +35,6 @@ static void updateRegisters();
 static uint8_t regShotFlag = 0;
 
 static volatile uint64_t registers[REGS_AMOUNT];
-
 
 static unsigned char keyValues[NKEYS][2] = {
 	{0, 0},

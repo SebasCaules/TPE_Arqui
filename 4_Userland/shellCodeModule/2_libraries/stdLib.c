@@ -2,7 +2,6 @@
 
 // MSJ_1 : Debido a un error con el stdarg.h y los flags -mno-sse y -mno-sse2 no se pueden implementar los doubles o floats
 
-
 static uint64_t typeToBuffer(char* buffer, uint64_t length, va_list args, Types type){
 	uint64_t ret = length;
 	char auxBuffer[BUFFER_SIZE];
@@ -96,7 +95,7 @@ uint64_t vargsToBuffer(char* buffer, const char* fmt, ...) {
 static int printArgs(uint64_t fd, const char* fmt, va_list args) {
     char buffer[BUFFER_SIZE];
     uint64_t length = argsToBuffer(buffer, fmt, args);
-    return sys_write(fd, buffer, length);
+    return sys_write(fd, (uint16_t *)buffer, length);
 }
 
 int fdprintf(uint64_t fd, const char* fmt, ...) {
@@ -121,7 +120,6 @@ int scanf(const char *format, ...) {
     int result = 0;
     char buffer[BUFFER_SIZE];
     int index = 0;
-
 
     while (sys_read(STDIN, (uint16_t *)&buffer[index], 1) > 0 && buffer[index] != '\n') {
         index++;
@@ -168,7 +166,7 @@ int getchar() {
 }
 
 int readInput(char * c) {
-    return sys_read(STDIN, c, 1);
+    return sys_read(STDIN, (uint16_t *)c, 1);
 }
 
 int putchar(char c) {
@@ -315,10 +313,10 @@ char* convert(char initBase, char finalBase, char *num) {
     from_decimal(decimal, finalBaseValue, convertedNum);
 
     if(finalBaseValue == 2){
-        vargsToBuffer(bufferRet, "Number %s in base %c: %sb\n", num, initBase, convertedNum, finalBase);
+        vargsToBuffer(bufferRet, "Number %s in base %c: %sb\n", num, finalBase, convertedNum);
     }
     else if(finalBaseValue == 16){
-        vargsToBuffer(bufferRet, "Number %s in base %c: 0x%s\n", num, initBase, convertedNum, finalBase);
+        vargsToBuffer(bufferRet, "Number %s in base %c: 0x%s\n", num, finalBase, convertedNum);
     }
     else {
         vargsToBuffer(bufferRet, "Number %s in base %c is %s in base %c\n", num, initBase, convertedNum, finalBase);

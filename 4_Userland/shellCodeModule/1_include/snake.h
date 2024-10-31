@@ -10,6 +10,6 @@
  * This function sets up the initial game parameters, presents the start view,
  * and calls the main game loop to begin gameplay. 
  */
-int snake();
+void snake();
 
 #endif

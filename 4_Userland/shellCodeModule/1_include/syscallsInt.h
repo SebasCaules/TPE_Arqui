@@ -43,7 +43,7 @@ int64_t sys_read(uint64_t fd, uint16_t * buffer, uint64_t amount);
  * @param amount The number of bytes to write.
  * @return The number of bytes written, or -1 on error.
  */
-int64_t sys_write(uint64_t fd, const char * buffer, uint64_t amount);
+int64_t sys_write(uint64_t fd, uint16_t * buffer, uint64_t amount);
 
 /**
  * @brief Clears the display screen.
