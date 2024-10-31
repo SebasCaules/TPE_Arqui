@@ -47,12 +47,10 @@ uint64_t sysCallHandler(Registers * regs) {
 uint64_t sys_sleep(uint64_t milliseconds) {
     unsigned long long initial_time = ms_elapsed();
     unsigned long long currentTime = initial_time;
-    // Activate interrupts
     _sti();
     while ((currentTime - initial_time) <= milliseconds) {
         currentTime = ms_elapsed();
     }
-    // Deactivate interrupts
     _cli();
     return 1;
 }

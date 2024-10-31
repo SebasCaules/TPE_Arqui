@@ -1,4 +1,5 @@
 #include <shellFunctions.h>
+#include <stdLib.h>
 
 static void toUtcMinus3(time_struct * time);
 
@@ -13,12 +14,15 @@ int isValidBase(const char *base);
 int isNumberInBase(const char *num, const char *base);
 int isConvertValid(char words[MAX_WORDS][MAX_WORD_LENGTH]);
 
+// para sacar warnings
+void noOp() {} // goes to another function
+
 static module modules[] = {
     {"help", help},
     {"time", showTime},
-    {"setfont", changeFontScale},
+    {"setfont", noOp},
     {"clear", clearTerminal},
-    {"convert", convert},
+    {"convert", noOp},
     {"snake", snake},
     {"spotify", spotifyInterface},
     {"piano", pianoInterface},
@@ -62,7 +66,6 @@ void clearTerminal() {
     clearView();
 }
 
-
 void spotifyInterface() {
 	clearView();
     puts("Welcome to the Spotify (clone) interface!\n");
@@ -75,7 +78,7 @@ void spotifyInterface() {
     char c[MAX_COMMAND_LENGTH + 1];
     int readLength;
     do {
-        putsNoNewLine("Please choose the number of option you want to play: ");
+        putsNoNewLine("Choose the song you want to play: ");
         readLength = gets(c, MAX_COMMAND_LENGTH);
         if(readLength > 1) {
             puts("Input only one digit");
@@ -90,8 +93,8 @@ void spotifyInterface() {
 
 void pianoInterface() {
     clearView();
-    puts("Welcome to the piano simulator (beta) interface!\n");
-    puts("The piano start at the middle C octave, C4. To increase the octave by one please play the keys while pushing the \'SHIFT\' key\n");
+    puts("Welcome to the piano simulator interface!\n");
+    puts("The piano starts at the middle C octave, C4. Play the keys while holding SHIFT to increase the octave by one.\n");
     puts("\'W\':C, \'E\':D, \'R\':E, \'T\':F, \'Y\':G, \'U\':A, \'I\':B, \'O\':C\n");
     puts("\'3\':C#, \'4\':D#, \'6\':F#, \'7\':G#, \'8\':A#\n");
     playKeys();
@@ -145,6 +148,7 @@ void getCmdInput() {
             return;
         }
     }
+
     if (strcmp(words[0], modules[2].name) == 0) {
         if (wordCount != 2) {
             puts("Invalid command. (setfont <scale>) (1 or 2)");
@@ -153,7 +157,6 @@ void getCmdInput() {
         changeFontScale(stringToInt(words[1]));
         return;
     }
-
     if(strcmp(words[0], modules[4].name) == 0) {
         if (!isConvertValid(words)) {
             puts("Invalid command. convert <b1> <b2> <num (in b1)>");

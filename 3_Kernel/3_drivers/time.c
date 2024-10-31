@@ -16,13 +16,6 @@ int seconds_elapsed() {
 	return ticks / 18;
 }
 
-void nano_sleep(int time){
-	int start = ticks;
-	while(ticks - start < time) {
-		_hlt();
-	}
-}
-
 uint64_t ms_elapsed() {
 	return ticks * 55;
 }

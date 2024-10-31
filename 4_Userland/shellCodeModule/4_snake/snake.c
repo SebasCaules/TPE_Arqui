@@ -73,7 +73,7 @@ static void updatePlayerScores();
 static void drawBackground();
 static int getColorForCell(int x, int y);
 
-int snake() {
+void snake() {
     leftBorder = (WINDOW_WIDTH - CANVAS_SIDE - 1);
 
     while (1) {
@@ -87,9 +87,8 @@ int snake() {
         }
 
     }
-
+    
     clearView();
-    return 0;
 
 }
 

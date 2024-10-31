@@ -96,7 +96,7 @@ uint64_t vargsToBuffer(char* buffer, const char* fmt, ...) {
 static int printArgs(uint64_t fd, const char* fmt, va_list args) {
     char buffer[BUFFER_SIZE];
     uint64_t length = argsToBuffer(buffer, fmt, args);
-    return sys_write(fd, buffer, length);
+    return sys_write(fd, (uint16_t *)buffer, length);
 }
 
 int fdprintf(uint64_t fd, const char* fmt, ...) {
@@ -168,7 +168,7 @@ int getchar() {
 }
 
 int readInput(char * c) {
-    return sys_read(STDIN, c, 1);
+    return sys_read(STDIN, (uint16_t *)c, 1);
 }
 
 int putchar(char c) {
@@ -299,7 +299,7 @@ static void from_decimal(int decimal, int base, char *buffer) {
 char* convert(char initBase, char finalBase, char *num) {
     int initBaseValue = get_base_from_char(initBase);
     int finalBaseValue = get_base_from_char(finalBase);
-    static char* bufferRet[BUFFER_SIZE];
+    static char bufferRet[BUFFER_SIZE];
 
     if (initBaseValue == -1 || finalBaseValue == -1) {
         return "The initial and final base must be one of: 'b', 'o', 'd', 'h'\n";
@@ -310,15 +310,15 @@ char* convert(char initBase, char finalBase, char *num) {
         vargsToBuffer(bufferRet, "Invalid number %s for base %c\n", num, initBase);
         return bufferRet;
     }
-
+    
     char convertedNum[BUFFER_SIZE];
     from_decimal(decimal, finalBaseValue, convertedNum);
 
     if(finalBaseValue == 2){
-        vargsToBuffer(bufferRet, "Number %s in base %c: %sb\n", num, initBase, convertedNum, finalBase);
+        vargsToBuffer(bufferRet, "Number %s in base %c: %sb\n", num, finalBase, convertedNum);
     }
     else if(finalBaseValue == 16){
-        vargsToBuffer(bufferRet, "Number %s in base %c: 0x%s\n", num, initBase, convertedNum, finalBase);
+        vargsToBuffer(bufferRet, "Number %s in base %c: 0x%s\n", num, finalBase, convertedNum);
     }
     else {
         vargsToBuffer(bufferRet, "Number %s in base %c is %s in base %c\n", num, initBase, convertedNum, finalBase);
