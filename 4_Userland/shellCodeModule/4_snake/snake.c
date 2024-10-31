@@ -75,7 +75,7 @@ static int getColorForCell(int x, int y);
 
 void snake() {
     leftBorder = (WINDOW_WIDTH - CANVAS_SIDE - 1);
-
+    sleep(400);
     while (1) {
         gameHasStarted = 0;
         numOfPlayers = 1;
