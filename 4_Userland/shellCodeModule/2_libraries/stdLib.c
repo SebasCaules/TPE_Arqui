@@ -2,7 +2,6 @@
 
 // MSJ_1 : Debido a un error con el stdarg.h y los flags -mno-sse y -mno-sse2 no se pueden implementar los doubles o floats
 
-
 static uint64_t typeToBuffer(char* buffer, uint64_t length, va_list args, Types type){
 	uint64_t ret = length;
 	char auxBuffer[BUFFER_SIZE];
@@ -121,7 +120,6 @@ int scanf(const char *format, ...) {
     int result = 0;
     char buffer[BUFFER_SIZE];
     int index = 0;
-
 
     while (sys_read(STDIN, (uint16_t *)&buffer[index], 1) > 0 && buffer[index] != '\n') {
         index++;
@@ -310,7 +308,7 @@ char* convert(char initBase, char finalBase, char *num) {
         vargsToBuffer(bufferRet, "Invalid number %s for base %c\n", num, initBase);
         return bufferRet;
     }
-    
+
     char convertedNum[BUFFER_SIZE];
     from_decimal(decimal, finalBaseValue, convertedNum);
 
