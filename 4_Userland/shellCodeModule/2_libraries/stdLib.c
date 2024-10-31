@@ -299,7 +299,7 @@ static void from_decimal(int decimal, int base, char *buffer) {
 char* convert(char initBase, char finalBase, char *num) {
     int initBaseValue = get_base_from_char(initBase);
     int finalBaseValue = get_base_from_char(finalBase);
-    static char* bufferRet[BUFFER_SIZE];
+    static char bufferRet[BUFFER_SIZE];
 
     if (initBaseValue == -1 || finalBaseValue == -1) {
         return "The initial and final base must be one of: 'b', 'o', 'd', 'h'\n";
