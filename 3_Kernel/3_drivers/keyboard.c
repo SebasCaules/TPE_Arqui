@@ -32,7 +32,7 @@ extern void _updateRegisters();
 extern uint64_t * _getRegisters();
 static void updateRegisters();
 
-static uint8_t reg_shot_flag = 0;
+static uint8_t regShotFlag = 0;
 
 static volatile uint64_t registers[REGS_AMOUNT];
 
@@ -163,7 +163,7 @@ unsigned char bufferNext() {
     }
 	
 	if(ctrlFlag && (toRet == 's' || toRet == 'S')){
-		reg_shot_flag = 1;
+		regShotFlag = 1;
 		printStrBW("The snapshot was taken");
 		updateRegisters();
 		toRet = '\n';
@@ -180,11 +180,15 @@ void updateRegisters() {
 }
 
 uint64_t getRegisters(uint64_t * r) {
-    if(!reg_shot_flag) {
+    if(!regShotFlag) {
         return 0;
     }
     for(int i = 0; i < REGS_AMOUNT; i++) {
         r[i] = registers[i];
     }
     return 1;
+}
+
+char getRegShotFlag() {
+	return regShotFlag;
 }

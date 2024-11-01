@@ -37,7 +37,7 @@ void help() {
     puts("  time            - Display the current system time.");
     puts("  setfont <scale> - Adjust the font size. (1 or 2)");
     puts("  clear           - Clear the terminal screen.");
-    puts("  convert         - Converts a number to another base. e.g. convert d b 8");
+    puts("  convert         - <base_1> <base_2> <number>");
     puts("  snake           - Starts the Snake game.");
     puts("  spotify         - Starts the spotify (clone) interface.");
     puts("  piano           - Starts the piano interface.");
@@ -102,25 +102,28 @@ void pianoInterface() {
 
 void getRegs() {
     uint64_t r[17];
-    sys_get_regs(r);
-    puts("Register snapshot:");
-    printf("rax: %x\n", r[0]);
-    printf("rbx: %x\n", r[1]);
-    printf("rcx: %x\n", r[2]);
-    printf("rdx: %x\n", r[3]);
-    printf("rsi: %x\n", r[4]);
-    printf("rdi: %x\n", r[5]);
-    printf("rbp: %x\n", r[6]);
-    printf("r8:  %x\n", r[7]);
-    printf("r9:  %x\n", r[8]);
-    printf("r10: %x\n", r[9]);
-    printf("r11: %x\n", r[10]);
-    printf("r12: %x\n", r[11]);
-    printf("r13: %x\n", r[12]);
-    printf("r14: %x\n", r[13]);
-    printf("r15: %x\n", r[14]);
-    printf("rsp: %x\n", r[15]);
-    printf("rip: %x\n", r[16]);
+    if(sys_get_regs(r)) {
+        puts("Register snapshot:");
+        printf("rax: %x\n", r[0]);
+        printf("rbx: %x\n", r[1]);
+        printf("rcx: %x\n", r[2]);
+        printf("rdx: %x\n", r[3]);
+        printf("rsi: %x\n", r[4]);
+        printf("rdi: %x\n", r[5]);
+        printf("rbp: %x\n", r[6]);
+        printf("r8:  %x\n", r[7]);
+        printf("r9:  %x\n", r[8]);
+        printf("r10: %x\n", r[9]);
+        printf("r11: %x\n", r[10]);
+        printf("r12: %x\n", r[11]);
+        printf("r13: %x\n", r[12]);
+        printf("r14: %x\n", r[13]);
+        printf("r15: %x\n", r[14]);
+        printf("rsp: %x\n", r[15]);
+        printf("rip: %x\n", r[16]);
+    } else {
+        puts("There is no snapshot available");
+    }
 }
 
 void askForUser() {

@@ -149,7 +149,6 @@ getSnap:
 	mov rax, regs
 	ret
 
-
 _hlt:
 	sti
 	hlt
