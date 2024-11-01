@@ -19,7 +19,8 @@ typedef enum {
     TICK,
     RESET_CURSOR,
     GET_REGS,
-    BEEP
+    BEEP,
+    DRAW_PIXEL
 } syscallsNum;
 
 typedef struct {
@@ -39,6 +40,7 @@ uint64_t sysCallHandler(Registers * regs) {
     case RESET_CURSOR: return sys_reset_cursor();
     case GET_REGS: return sys_get_regs((uint64_t *)regs->rdi);
     case BEEP: return sys_beep((uint64_t)regs->rdi, (uint64_t)regs->rsi);
+    case DRAW_PIXEL: return sys_draw_pixel((uint64_t)regs->rdi, (uint64_t)regs->rsi, (uint32_t)regs->rdx);
     default: return 0;
     }
 }
@@ -111,5 +113,10 @@ uint64_t sys_get_regs(uint64_t * r) {
 
 uint64_t sys_beep(uint64_t freq, uint64_t milliseconds) {
     beep(freq, milliseconds);
+    return 0;
+}
+
+uint64_t sys_draw_pixel(uint64_t x, uint64_t y, uint32_t color) {
+    putPixel(color, x, y);
     return 0;
 }

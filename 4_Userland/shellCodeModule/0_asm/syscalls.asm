@@ -9,6 +9,7 @@ GLOBAL sys_sleep
 GLOBAL sys_reset_cursor
 GLOBAL sys_get_regs
 GLOBAL sys_beep
+GLOBAL sys_draw_pixel
 
 section .text
 
@@ -124,3 +125,6 @@ sys_get_regs:
     
 sys_beep:
     sys_handler 10
+
+sys_draw_pixel:
+    sys_handler 11

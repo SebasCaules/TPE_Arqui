@@ -12,7 +12,9 @@
 #define INITIAL_SNAKE_LENGTH 3
 
 #define BLACK 0x00000000
-#define FOOD_COLOR 0x00FF4500
+#define RED 0x00FF4500
+#define DARK_RED 0x00CC0000
+#define BROWN 0x008B4513
 #define GREEN 0x0032CD32
 #define BLUE 0x001E90FF
 #define BACKGROUND_COLOR 0x003b3b3b
@@ -72,10 +74,11 @@ static int askDifficulty();
 static void updatePlayerScores();
 static void drawBackground();
 static int getColorForCell(int x, int y);
+static void drawApple(int startX, int startY);
 
 void snake() {
     leftBorder = (WINDOW_WIDTH - CANVAS_SIDE - 1);
-    sleep(400);
+    
     while (1) {
         gameHasStarted = 0;
         numOfPlayers = 1;
@@ -129,7 +132,7 @@ static void awaitStart() {
 
 static void play() {
     int bufferSize;
-
+    sleep(400);
     while(1) {
 
         bufferSize = 0;
@@ -226,7 +229,8 @@ static void placeFood() {
 
     food.x = xPos;
     food.y = yPos;
-    drawRectangle(leftBorder + xPos * SQUARE_SIDE, yPos * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, FOOD_COLOR);
+    drawApple(leftBorder + xPos * SQUARE_SIDE, yPos * SQUARE_SIDE);
+    // drawRectangle(leftBorder + xPos * SQUARE_SIDE, yPos * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, FOOD_COLOR);
 }
 
 static void initializeSnakes() {
@@ -438,4 +442,37 @@ static void drawBackground() {
 
 static int getColorForCell(int x, int y) {
     return ((x + y) % 2 == 0) ? GRID_COLOR_1 : GRID_COLOR_2;
+}
+
+void drawApple(int startX, int startY) {
+    // Leaf
+    for (uint64_t y = 2; y < 6; y++) {
+        for (uint64_t x = 11; x < 18; x++) {
+            if ((y == 2 && (x < 13 || x > 15)) || (y == 5 && (x < 12 || x > 16))) continue;
+            sys_draw_pixel(startX + x, startY + y, GREEN);
+        }
+    }
+
+    // Stem
+    for (uint64_t y = 6; y < 9; y++) {
+        for (uint64_t x = 14; x < 18; x++) {
+            sys_draw_pixel(startX + x, startY + y, BROWN);
+        }
+    }
+
+    // Apple body (more rounded and larger to take up more space)
+    for (uint64_t y = 8; y < 28; y++) {
+        for (uint64_t x = 5; x < 27; x++) {
+            // Check if pixel is within a rounded boundary for a circular look
+            if ((x - 16) * (x - 16) + (y - 18) * (y - 18) <= 100) {
+                if ((x - 16) * (x - 16) + (y - 20) * (y - 20) > 80) {
+                    // Edge shading for a rounded look
+                    sys_draw_pixel(startX + x, startY + y, DARK_RED);
+                } else {
+                    // Main apple color
+                    sys_draw_pixel(startX + x, startY + y, RED);
+                }
+            }
+        }
+    }
 }

@@ -96,4 +96,13 @@ uint64_t sys_get_regs(uint64_t * r);
  */
 uint64_t sys_beep(uint64_t freq, uint64_t milliseconds);
 
+/**
+ * @brief Draws a pixel on the screen at a specified (x, y) position with a given color.
+ * @param x The x-coordinate of the pixel position.
+ * @param y The y-coordinate of the pixel position.
+ * @param color The color of the pixel in hexadecimal format (e.g., 0xRRGGBB).
+ * @return 0 on success, or -1 on failure.
+ */
+uint64_t sys_draw_pixel(uint64_t x, uint64_t y, uint32_t color);
+
 #endif
