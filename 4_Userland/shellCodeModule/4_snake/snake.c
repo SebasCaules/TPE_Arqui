@@ -410,7 +410,7 @@ static int askDifficulty() {
         putsNoNewLine("Enter the difficulty (1 - 5): ");
         gets(buffer, 2);
         difficulty = stringToInt(buffer);
-    } while (difficulty < 1 && difficulty > 5);
+    } while (difficulty < 1 || difficulty > 5);
     return difficulty;
 }
 
