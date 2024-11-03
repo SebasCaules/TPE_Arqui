@@ -99,7 +99,8 @@ static unsigned char keyValues[NKEYS][2] = {
 
 char isSpecialKey(int key) {
 	return key == L_SHIFT_PRESS || key == R_SHIFT_PRESS || 
-    key == CAPS_LOCK_PRESS || key == ALT_PRESS || key == ESC;
+    key == CAPS_LOCK_PRESS || key == ALT_PRESS || key == ESC ||
+	key == UP_ARROW || key == DOWN_ARROW || key == LEFT_ARROW || key == RIGHT_ARROW;
 }
 
 static char buffer[BUFFER_SIZE];
@@ -157,6 +158,7 @@ unsigned char bufferNext() {
     unsigned char toRet = buffer[nextToRead];
     buffer[nextToRead++] = 0;
     nextToRead %= BUFFER_SIZE;
+
 
     if (toRet != '6' && toRet != ';' && toRet != ':' && isSpecialKey(toRet)) {
         return bufferNext();
