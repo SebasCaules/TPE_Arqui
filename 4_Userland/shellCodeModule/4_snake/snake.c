@@ -102,7 +102,6 @@ static void presentStartView() {
     numOfPlayers = askNumOfPlayers();
     difficulty = askDifficulty();
     clearView();
-
 }
 
 static void startGame() {
@@ -230,7 +229,6 @@ static void placeFood() {
     food.x = xPos;
     food.y = yPos;
     drawApple(leftBorder + xPos * SQUARE_SIDE, yPos * SQUARE_SIDE);
-    // drawRectangle(leftBorder + xPos * SQUARE_SIDE, yPos * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, FOOD_COLOR);
 }
 
 static void initializeSnakes() {

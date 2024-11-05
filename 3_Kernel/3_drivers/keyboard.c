@@ -98,9 +98,20 @@ static unsigned char keyValues[NKEYS][2] = {
 };
 
 char isSpecialKey(int key) {
-	return key == L_SHIFT_PRESS || key == R_SHIFT_PRESS || 
-    key == CAPS_LOCK_PRESS || key == ALT_PRESS || key == ESC ||
-	key == UP_ARROW || key == DOWN_ARROW || key == LEFT_ARROW || key == RIGHT_ARROW;
+    switch(key) {
+        case L_SHIFT_PRESS:
+        case R_SHIFT_PRESS:
+        case CAPS_LOCK_PRESS:
+        case ALT_PRESS:
+        case ESC:
+        case UP_ARROW:
+        case DOWN_ARROW:
+        case LEFT_ARROW:
+        case RIGHT_ARROW:
+            return 1;
+        default:
+            return 0;
+    }
 }
 
 static char buffer[BUFFER_SIZE];
@@ -132,8 +143,6 @@ void pressedKey(){
 	case CTRL_RELEASE:
 		ctrlFlag = 0;
 		break;
-    default:
-        break;
     }
 
     if (c <= MAX_PRESS_CODE) {
@@ -152,25 +161,23 @@ void pressedKey(){
 }
 
 unsigned char bufferNext() {
-    if (nextToRead == current) {
-        return 0;
-    }
-    unsigned char toRet = buffer[nextToRead];
-    buffer[nextToRead++] = 0;
-    nextToRead %= BUFFER_SIZE;
+	if (nextToRead == current) {
+		return 0;
+	}
+	unsigned char toRet = buffer[nextToRead];
+	buffer[nextToRead++] = 0;
+	nextToRead %= BUFFER_SIZE;
 
-
-    if (toRet != '6' && toRet != ';' && toRet != ':' && isSpecialKey(toRet)) {
+	if (toRet != '6' && toRet != ';' && toRet != ':' && isSpecialKey(toRet)) {
         return bufferNext();
     }
-	
-	if(ctrlFlag && (toRet == 's' || toRet == 'S')){
+
+	if (ctrlFlag && (toRet == 's' || toRet == 'S')) {
 		regShotFlag = 1;
-		printStrBW("The snapshot was taken");
 		updateRegisters();
 		toRet = '\n';
 	}
-    return toRet;
+	return toRet;
 }
 
 void updateRegisters() {

@@ -14,15 +14,15 @@ int isValidBase(const char *base);
 int isNumberInBase(const char *num, const char *base);
 int isConvertValid(char words[MAX_WORDS][MAX_WORD_LENGTH]);
 
-// para sacar warnings
-void noOp() {} // goes to another function
+// // para sacar warnings
+// void noOp() {} // goes to another function
 
 static module modules[] = {
     {"help", help},
     {"time", showTime},
-    {"setfont", noOp},
+    {"setfont", changeFontScale},
     {"clear", clearTerminal},
-    {"convert", noOp},
+    {"convert", convert},
     {"snake", snake},
     {"spotify", spotifyInterface},
     {"piano", pianoInterface},
@@ -98,6 +98,7 @@ void pianoInterface() {
     puts("\'W\':C, \'E\':D, \'R\':E, \'T\':F, \'Y\':G, \'U\':A, \'I\':B, \'O\':C\n");
     puts("\'3\':C#, \'4\':D#, \'6\':F#, \'7\':G#, \'8\':A#\n");
     playKeys();
+    clearView();
 }
 
 void getRegs() {
@@ -145,13 +146,6 @@ void getCmdInput() {
     char words[MAX_WORDS][MAX_WORD_LENGTH];
     int wordCount = splitString(command, words);
 
-    for(int i = 0; i < NUM_MODULES; i++){
-        if(strcmp(command,modules[i].name)==0){
-            modules[i].function();
-            return;
-        }
-    }
-
     if (strcmp(words[0], modules[2].name) == 0) {
         if (wordCount != 2) {
             puts("Invalid command. (setfont <scale>) (1 or 2)");
@@ -161,11 +155,19 @@ void getCmdInput() {
         return;
     }
     if(strcmp(words[0], modules[4].name) == 0) {
-        if (!isConvertValid(words)) {
-            puts("Invalid command. convert <b1> <b2> <num (in b1)>");
+        if (wordCount != 4) {
+            puts("Invalid command. (convert <base1> <base2> <number>)");
+            return;
         }
         printf(convert(words[1][0], words[2][0], words[3]));
         return;
+    }
+
+    for(int i = 0; i < NUM_MODULES; i++){
+        if(strcmp(command,modules[i].name)==0){
+            modules[i].function();
+            return;
+        }
     }
 
     printf("Command not found: %s\n", words[0]); // Hay que agarrar solo la primera palabra
@@ -206,45 +208,4 @@ static void toUtcMinus3(time_struct * time) {
     else {
         time->hour = time->hour - 3;
     }
-}
-
-int isValidBase(const char *base) {
-    return (strcmp(base, "d") == 0 || strcmp(base, "b") == 0 || strcmp(base, "h") == 0);
-}
-
-int isNumberInBase(const char *num, const char *base) {
-    if (strcmp(base, "d") == 0) { // Decimal
-        for (int i = 0; num[i] != '\0'; i++) {
-            if (!isNumber(num[i])) return 0;
-        }
-    } else if (strcmp(base, "b") == 0) { // Binary
-        for (int i = 0; num[i] != '\0'; i++) {
-            if (num[i] != '0' && num[i] != '1') return 0;
-        }
-    } else if (strcmp(base, "h") == 0) { // Hexadecimal
-        for (int i = 0; num[i] != '\0'; i++) {
-            if (!isNumber(num[i]) && !(num[i] >= 'a' && num[i] <= 'f') && !(num[i] >= 'A' && num[i] <= 'F')) {
-                return 0;
-            }
-        }
-    } else {
-        return 0;
-    }
-    return 1;
-}
-
-int isConvertValid(char words[MAX_WORDS][MAX_WORD_LENGTH]) {
-    if (strcmp(words[0], "convert") != 0) {
-        return 0;
-    }
-    
-    if (!isValidBase(words[1]) || !isValidBase(words[2])) {
-        return 0;
-    }
-
-    if (!isNumberInBase(words[3], words[1])) {
-        return 0;
-    }
-
-    return 1;
 }
