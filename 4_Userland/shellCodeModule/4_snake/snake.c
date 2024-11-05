@@ -21,7 +21,7 @@
 #define GRID_COLOR_1 0x00CCFFCC
 #define GRID_COLOR_2 0x00B2FFB2
 
-#define BASE_TIME 200
+#define BASE_TIME 150
 
 #define INITIAL_SPACING 4
 
@@ -230,7 +230,6 @@ static void placeFood() {
     food.x = xPos;
     food.y = yPos;
     drawApple(leftBorder + xPos * SQUARE_SIDE, yPos * SQUARE_SIDE);
-    // drawRectangle(leftBorder + xPos * SQUARE_SIDE, yPos * SQUARE_SIDE, SQUARE_SIDE, SQUARE_SIDE, FOOD_COLOR);
 }
 
 static void initializeSnakes() {
@@ -445,7 +444,6 @@ static int getColorForCell(int x, int y) {
 }
 
 void drawApple(int startX, int startY) {
-    // Leaf
     for (uint64_t y = 2; y < 6; y++) {
         for (uint64_t x = 11; x < 18; x++) {
             if ((y == 2 && (x < 13 || x > 15)) || (y == 5 && (x < 12 || x > 16))) continue;
@@ -453,23 +451,18 @@ void drawApple(int startX, int startY) {
         }
     }
 
-    // Stem
     for (uint64_t y = 6; y < 9; y++) {
         for (uint64_t x = 14; x < 18; x++) {
             sys_draw_pixel(startX + x, startY + y, BROWN);
         }
     }
 
-    // Apple body (more rounded and larger to take up more space)
     for (uint64_t y = 8; y < 28; y++) {
         for (uint64_t x = 5; x < 27; x++) {
-            // Check if pixel is within a rounded boundary for a circular look
             if ((x - 16) * (x - 16) + (y - 18) * (y - 18) <= 100) {
                 if ((x - 16) * (x - 16) + (y - 20) * (y - 20) > 80) {
-                    // Edge shading for a rounded look
                     sys_draw_pixel(startX + x, startY + y, DARK_RED);
                 } else {
-                    // Main apple color
                     sys_draw_pixel(startX + x, startY + y, RED);
                 }
             }
